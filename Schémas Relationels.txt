@@ -1,13 +1,88 @@
-Client(*id_client, nom, prenom, total_depensé, remise_future, adhérent, #id_grade)
-Adresse(*id_adresse, numéro, rue, ville, code_postal, #id_client)
-Contact(*id_contact, email, instagram, facebook, #id_contact)
-SoldePoint(*id_solde_point, date_expiration, quantité, #id_client, #id_valeur_point)
-ValeurPoint(*id_valeur_point, valeur)
-Grade(*id_grade, intitulé, min_dépense, max_dépense)
-NumeroTelephone(id_numero_telephone,numero,#id_client)
-Commande(*id_commande, date_passage, date-validation, date_arrivée, prix_total, #id_status_commande, #id_client)
-ItemCommande(*id_item_commande, quantite, prix_vendu, #id_commande, #id_status_item_commande, #id_article)
-Facture(*id_facture, date_facturation, frais_service, frais_livraison, remise, prix_facture, #id_commande,        )
+Client(id_client :INT PRIMARY KEY NOT NULL AUTO_INCREMENT , 
+  nom: VARCHAR[20], 
+  prenom: VARCHAR[20] , 
+  total_depensé: INT, 
+  remise_future: INT , 
+  adhérent: BOOLEAN , 
+  id_grade:FOREIGN KEY REFERENCES Grade(id_grade))
+
+Adresse(*id_adresse:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  numéro: VARCHAR[20], 
+  rue: VARCHAR[50], 
+  ville: VARCHAR[20], 
+  code_postal: INT, 
+  id_client:FOREIGN KEY REFERENCES Client(id_client))
+  
+Contact(id_contact:INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  email: VARCHAR[50], 
+  instagram: VARCHAR[20], 
+  facebook: VARCHAR[50], 
+  id_client: FOREIGN KEY REFERENCES Client(id_client))
+  
+SoldePoint(id_solde_point:INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  date_expiration: DATE, 
+  quantité: INT, 
+  id_client: FOREIGN KEY REFERENCES Client(id_client), 
+  id_valeur_point: FOREIGN KEY REFERENCES ValeurPoint(id_valeur_point))
+  
+ValeurPoint(id_valeur_point:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+valeur: INT)
+
+Grade(id_grade:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  intitule_grade: VARCHAR[20] , 
+  min_dépense: INT , 
+  max_dépense: INT)
+  
+NumeroTelephone(id_numero_telephone: INT PRIMARY KEY NOT NULL AUTO_INCREMENT ,
+  numero: VARCHAR[20] ,
+  id_client: FOREIGN KEY REFERENCES Client(id_client))
+
+Commande(*id_commande:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  date_passage: DATE, 
+  date-validation : DATE , 
+  date_arrivée : DATE , 
+  prix_total: INT, 
+  #id_status_commande: FOREIGN KEY REFERENCES StatusCommande(id_status_commande), 
+  #id_client: FOREIGN KEY REFERENCES Client(id_client))
+
+ItemCommande(*id_item_commande:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  quantite:INT, 
+  prix_vendu:INT , 
+  #id_commande: FOREIGN KEY REFERENCES Commande(id_commande), 
+  #id_status_item_commande: FOREIGN KEY REFERENCES StatusItemCommande(id_status_commande, 
+  #id_article: FOREIGN KEY REFERENCES Article(id_article))
+
+Facture(*id_facture:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  date_facturation:DATE, 
+  frais_service:INT , 
+  frais_livraison:INT, 
+  remise:INT , 
+  prix_facture:INT , 
+  #id_commande: FOREIGN KEY REFERENCES Commande(id_commande))
+
+Paiement(*id_paiement:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  montant:INT , 
+  type_paiement: VARCHAR[20], 
+  date_paiement:DATE, 
+  #id-type_paiement:: FOREIGN KEY REFERENCES TypePaiement(id_type_paiement), 
+  #id_facture: FOREIGN KEY REFERENCES Facture(id_facture))
+  #id_commande: FOREIGN KEY REFERENCES Commande(id_commande))
+
+StatusCommande(*id_status_commande:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  intitule_paiement: VARCHAR[20])
+
+StatusItemCommande(*id_status_item_commande:INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  intitule_status_item_commande: VARCHAR[20])
+  
+Article(*id_article:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  prix_unitaire:INT, 
+  promotion:INT, 
+  valeur_points:INT , 
+  #id_status_article: FOREIGN KEY REFERENCES StatusArticle)
+  
+StatusArticle(*id_status_article:INT PRIMARY KEY NOT NULL AUTO_INCREMENT , 
+  intitule_status_article: VARCHAR[20])
+
 
 
 
