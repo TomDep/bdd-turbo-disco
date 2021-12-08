@@ -26,6 +26,9 @@ class FicheClient
     private $prenom;
     private $grade;
 
+    private $totalDepense = 590;
+    private $id;
+
     // Adresses
     private $adresses = [];
 
@@ -37,8 +40,9 @@ class FicheClient
     private $instagram;
     private $email;
 
-    public function __construct($nom, $prenom, $grade, $facebook, $instagram, $email)
+    public function __construct($id, $nom, $prenom, $grade, $facebook, $instagram, $email)
     {
+        $this->id = $id;
         $this->nom = $nom;
         $this->prenom = $prenom;
         $this->grade = $grade;
@@ -120,5 +124,24 @@ class FicheClient
             </div>
         </div>
 <?php
+    }
+
+    public function afficherApercu() {
+        ?>
+        <div class="row">
+            <div class="col-3">
+                <span><?php echo $this->prenom . ' ' . $this->nom; ?></span>
+            </div>
+            <div class="col-3">
+            <span>Montant dépensé : <?php echo $this->totalDepense; ?> €</span>
+            </div>
+            <div class="col-1">
+                <span><?php echo $this->grade; ?></span>
+            </div>
+            <div class="col">
+                <a class="float-end" href="fiche_client.php?id=<?php echo $this->id; ?>">Voir la fiche</a>
+            </div>
+        </div>
+        <?php
     }
 }

@@ -13,6 +13,7 @@
 require_once("../lib/FicheClient.php");
 
 $client = new FicheClient(
+        687152,
         "De Pasquale",
         "Tom",
         "Silver",

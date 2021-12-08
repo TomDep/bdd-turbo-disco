@@ -7,5 +7,41 @@
 <body>
 <?php  include("../templates/menu.php");  ?>
 
+<?php
+
+require_once "../lib/FicheClient.php";
+
+$client1 = new FicheClient(
+        955121,
+        "De Pasquale",
+        "Tom",
+        "Silver",
+        "Tom de Pasquale",
+        "@tom_depasquale",
+        "tomdepasquale1@gmail.com");
+
+$client2 = new FicheClient(
+        1565325645,
+        "Soulan",
+        "Guilhem",
+        "Gold",
+        "Guilhem Soulan",
+        "@guigui",
+        "guilhemsoulan@gmail.com");
+
+$clients = [$client1, $client2];
+?>
+
+<div class="container p-5">
+
+    <ul class="list-group">
+    <?php
+    foreach ($clients as $client) { ?>
+        <li class="list-group-item"><?php $client->afficherApercu(); ?></li><?php
+    }
+    ?>
+    </ul>
+</div>
+
 </body>
 </html>
