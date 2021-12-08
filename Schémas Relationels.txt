@@ -1,23 +1,23 @@
-Client(id_client :INT PRIMARY KEY NOT NULL AUTO_INCREMENT , 
+Client(id_client INT PRIMARY KEY NOT NULL, 
   nom: VARCHAR[20], 
   prenom: VARCHAR[20] , 
   total_depensé: INT, 
   remise_future: INT , 
   adhérent: BOOLEAN , 
-  id_grade:FOREIGN KEY REFERENCES Grade(id_grade))
+  FOREIGN KEY(id_grade)  REFERENCES Grade(id_grade));
 
-Adresse(*id_adresse:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+Adresse(id_adresse INT PRIMARY KEY NOT NULL,, 
   numéro: VARCHAR[20], 
   rue: VARCHAR[50], 
   ville: VARCHAR[20], 
   code_postal: INT, 
-  id_client:FOREIGN KEY REFERENCES Client(id_client))
+  FOREIGN KEY (id_client) REFERENCES Client(id_client),
   
 Contact(id_contact:INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   email: VARCHAR[50], 
   instagram: VARCHAR[20], 
   facebook: VARCHAR[50], 
-  id_client: FOREIGN KEY REFERENCES Client(id_client))
+  FOREIGN KEY (id_client) REFERENCES Client(id_client),
   
 SoldePoint(id_solde_point:INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   date_expiration: DATE, 
