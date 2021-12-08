@@ -1,0 +1,6 @@
+Client(*id_client, nom, prenom, total_depensé, remise_future, adhérent, #id_grade)
+Adresse(*id_adresse, numéro, rue, ville, code_postal, #id_client)
+Contact(*id_contact, email, instagram, facebook, #id_contact)
+SoldePoint(*id_solde_point, date_expiration, quantité, #id_client, #id_valeur_point)
+ValeurPoint(*id_valeur_point, valeur)
+Grade(*id_grade, intitulé, min_dépense, max_dépense)
