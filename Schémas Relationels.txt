@@ -7,7 +7,7 @@ Grade(*id_grade, intitulé, min_dépense, max_dépense)
 NumeroTelephone(id_numero_telephone,numero,#id_client)
 Commande(*id_commande, date_passage, date-validation, date_arrivée, prix_total, #id_status_commande, #id_client)
 ItemCommande(*id_item_commande, quantite, prix_vendu, #id_commande, #id_status_item_commande, #id_article)
-Facture(*id_facture, date_facturation, frais_service, frais_livraison, remise, prix_facture, #id_commande)
+Facture(*id_facture, date_facturation, frais_service, frais_livraison, remise, prix_facture, #id_commande,        )
 
 
 
