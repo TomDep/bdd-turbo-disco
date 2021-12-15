@@ -20,7 +20,7 @@ class Adresse
     }
 }
 
-class FicheClient
+class Client
 {
     private $nom;
     private $prenom;
@@ -97,7 +97,7 @@ class FicheClient
         <ul class="list-group-flush">
             <?php foreach ($this->numerosTel as $numero) {?>
                 <li class="list-group-item">
-                    <?php echo $numero; ?>
+                    <i class="bi bi-telephone me-3"></i><?php echo $numero; ?>
                 </li>
             <?php } ?>
         </ul>
