@@ -9,9 +9,9 @@
 
 <?php
 
-require_once "../lib/FicheClient.php";
+require_once "../lib/Client.php";
 
-$client1 = new FicheClient(
+$client1 = new Client(
         955121,
         "De Pasquale",
         "Tom",
@@ -20,7 +20,7 @@ $client1 = new FicheClient(
         "@tom_depasquale",
         "tomdepasquale1@gmail.com");
 
-$client2 = new FicheClient(
+$client2 = new Client(
         1565325645,
         "Soulan",
         "Guilhem",

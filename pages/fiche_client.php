@@ -10,9 +10,9 @@
 <div class="container p-5">
 <?php
 
-require_once("../lib/FicheClient.php");
+require_once("../lib/Client.php");
 
-$client = new FicheClient(
+$client = new Client(
         687152,
         "De Pasquale",
         "Tom",
@@ -22,10 +22,10 @@ $client = new FicheClient(
         "tomdepasquale1@gmail.com");
 
 $client->ajouterAdresse(new Adresse(74, "Rue du Pré", 72000, "Le Mans"));
-//$client->ajouterAdresse(new Adresse(2, "Cours de Assé", 72000, "Le Mans"));
+$client->ajouterAdresse(new Adresse(2, "Cours de Assé", 72000, "Le Mans"));
 
 $client->ajouterNumeroTelephone("+33 7 83 55 79 56");
-$client->ajouterNumeroTelephone("+33 6 55 27 32 12");
+//$client->ajouterNumeroTelephone("+33 6 55 27 32 12");
 
 $client->afficher();
 ?>
