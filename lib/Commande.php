@@ -94,8 +94,10 @@ class Commande
                 break;
             case StatutCommande::en_cours:
                 echo '<small class="ms-3"> depuis le '. $this->dateValidation .'</small>';
-            case StatutCommande::livree:
+                break;
+                case StatutCommande::livree:
                 echo '<small class="ms-3"> le '. $this->dateArrivee .'</small>';
+                break;
         }
     }
 }
