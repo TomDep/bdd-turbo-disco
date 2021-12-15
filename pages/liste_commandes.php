@@ -14,9 +14,15 @@ $commande1 = new Commande(86534);
 $commande1->changerStatut(StatutCommande::attente_validation);
 
 $commande2 = new Commande(3654156);
-$commande2->changerStatut(StatutCommande::livree);
+$commande2->changerStatut(StatutCommande::en_cours);
 
-$commandes = [$commande1, $commande2];
+$commande3 = new Commande(69545);
+$commande3->changerStatut(StatutCommande::livree);
+
+$commande4 = new Commande(358654);
+$commande4->changerStatut(StatutCommande::annulee);
+
+$commandes = [$commande1, $commande2, $commande3, $commande4];
 ?>
 
 <div class="container p-5">

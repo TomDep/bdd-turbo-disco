@@ -5,6 +5,11 @@ abstract class StatutCommande {
     const en_cours              = 1;
     const livree                = 2;
     const annulee               = 3;
+
+    const couleur_attente_validation    = "#2f2fff";
+    const couleur_en_cours              = "#c8a900";
+    const couleur_livree                = "#119822";
+    const couleur_annulee               = "#F93943";
 }
 
 class Commande
@@ -12,9 +17,7 @@ class Commande
     private $id;
 
     // Dates
-    private $datePassage = "10/12/21";
-    private $dateValidation = "13/12/21";
-    private $dateArrivee = "28/12/21";
+    private $derniereDate = "15/11/2021";
 
     private $statut;
 
@@ -32,14 +35,18 @@ class Commande
         ?>
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
-                <div class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-commande-<?php echo $this->id; ?>">
-                    <?php $this->afficherIconeStatut(); ?>
-                    <?php $this->afficherNomStatut(); ?>
-                    <?php $this->afficherDerniereDate(); ?>
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-commande-<?php echo $this->id; ?>">
+                    <div style="width: 20%">
+                        <?php $this->afficherIconeStatut(); ?>
+                        <?php $this->afficherNomStatut(); ?>
+                    </div>
+                    <div class="w-25">
+                        <?php $this->afficherDerniereDate(); ?>
+                    </div>
 
-                    <span class="ms-auto"><?php echo count($this->articles); ?> article(s)</span>
-                    <span class="badge bg-secondary ms-3 ms-auto">Commande #<?php echo $this->id; ?></span>
-                </div>
+                    <span class="w-25"><?php echo count($this->articles); ?> article(s)</span>
+                    <span class="badge bg-secondary ms-3">Commande #<?php echo $this->id; ?></span>
+                </button>
             </h2>
             <div id="collapse-commande-<?php echo $this->id; ?>" class="accordion-collapse collapse">
                 <div class="accordion-body">
@@ -60,13 +67,16 @@ class Commande
 
         switch ($this->statut) {
             case StatutCommande::attente_validation:
-                echo '<i class="bi bi-circle me-3"></i>';
+                echo '<i class="bi bi-circle me-3" style="color: '. StatutCommande::couleur_attente_validation .'"></i>';
                 break;
             case StatutCommande::en_cours:
-                echo '<i class="bi bi-slash-circle me-3"></i>';
+                echo '<i class="bi bi-slash-circle me-3" style="color: '. StatutCommande::couleur_en_cours .'"></i>';
                 break;
             case StatutCommande::livree:
-                echo '<i class="bi bi-check2-circle me-3"></i>';
+                echo '<i class="bi bi-check-circle me-3" style="color: '. StatutCommande::couleur_livree .'"></i>';
+                break;
+            case StatutCommande::annulee:
+                echo '<i class="bi bi-x-circle me-3" style="color: '. StatutCommande::couleur_annulee .'"></i>';
                 break;
         }
     }
@@ -83,20 +93,22 @@ class Commande
             case StatutCommande::livree:
                 echo '<span>Commande livrée</span>';
                 break;
+            case StatutCommande::annulee:
+                echo '<span>Commande annulée</span>';
+                break;
         }
     }
 
     private function afficherDerniereDate()
     {
         switch ($this->statut) {
-            case StatutCommande::attente_validation:
-                echo '<small class="ms-3"> depuis le '. $this->datePassage .'</small>';
-                break;
             case StatutCommande::en_cours:
-                echo '<small class="ms-3"> depuis le '. $this->dateValidation .'</small>';
+            case StatutCommande::attente_validation:
+                echo '<small class="ms-3"> depuis le '. $this->derniereDate .'</small>';
                 break;
-                case StatutCommande::livree:
-                echo '<small class="ms-3"> le '. $this->dateArrivee .'</small>';
+            case StatutCommande::annulee:
+            case StatutCommande::livree:
+                echo '<small class="ms-3"> le '. $this->derniereDate .'</small>';
                 break;
         }
     }
