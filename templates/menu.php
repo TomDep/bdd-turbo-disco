@@ -11,7 +11,7 @@
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Clients</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="fiche_client.php">Voir fiche client</a></li>
-                        <li><a class="dropdown-item" href="liste_clients.php">Voir liste clients</a></li>
+                        <li><a class="dropdown-item" href="liste_clients.php">Tous les clients</a></li>
 
                         <li><hr class="dropdown-divider"></li>
 
@@ -24,7 +24,7 @@
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Commandes</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="commande.php">Voir une commande</a></li>
-                        <li><a class="dropdown-item" href="liste_commande.php">Voir la liste des commandes</a></li>
+                        <li><a class="dropdown-item" href="liste_commandes.php">Toutes les commandes</a></li>
 
                         <li><hr class="dropdown-divider"></li>
 
