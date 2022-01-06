@@ -1,87 +1,87 @@
 Client(id_client INT PRIMARY KEY NOT NULL, 
-  nom: VARCHAR[20], 
-  prenom: VARCHAR[20] , 
-  total_depensé: INT, 
-  remise_future: INT , 
-  adhérent: BOOLEAN , 
+  nom VARCHAR[20], 
+  prenom VARCHAR[20] , 
+  total_depensé INT, 
+  remise_future INT , 
+  adhérent BOOLEAN , 
   FOREIGN KEY(id_grade)  REFERENCES Grade(id_grade));
 
-Adresse(id_adresse INT PRIMARY KEY NOT NULL,, 
-  numéro: VARCHAR[20], 
-  rue: VARCHAR[50], 
-  ville: VARCHAR[20], 
-  code_postal: INT, 
+Adresse(id_adresse INT PRIMARY KEY NOT NULL, 
+  numéro VARCHAR[20], 
+  rue VARCHAR[50], 
+  ville VARCHAR[20], 
+  code_postal INT, 
   FOREIGN KEY (id_client) REFERENCES Client(id_client),
   
 Contact(id_contact:INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  email: VARCHAR[50], 
-  instagram: VARCHAR[20], 
-  facebook: VARCHAR[50], 
+  email VARCHAR[50], 
+  instagram VARCHAR[20], 
+  facebook VARCHAR[50], 
   FOREIGN KEY (id_client) REFERENCES Client(id_client),
   
-SoldePoint(id_solde_point:INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  date_expiration: DATE, 
-  quantité: INT, 
-  id_client: FOREIGN KEY REFERENCES Client(id_client), 
-  id_valeur_point: FOREIGN KEY REFERENCES ValeurPoint(id_valeur_point))
+SoldePoint(id_solde_point INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  date_expiration  DATE, 
+  quantité  INT, 
+  id_client  FOREIGN KEY REFERENCES Client(id_client), 
+  id_valeur_point  FOREIGN KEY REFERENCES ValeurPoint(id_valeur_point))
   
 ValeurPoint(id_valeur_point:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
-valeur: INT)
+valeur INT)
 
-Grade(id_grade:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
-  intitule_grade: VARCHAR[20] , 
-  min_dépense: INT , 
-  max_dépense: INT)
+Grade(id_grade INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  intitule_grade  VARCHAR[20] , 
+  min_dépense  INT , 
+  max_dépense  INT)
   
-NumeroTelephone(id_numero_telephone: INT PRIMARY KEY NOT NULL AUTO_INCREMENT ,
-  numero: VARCHAR[20] ,
-  id_client: FOREIGN KEY REFERENCES Client(id_client))
+NumeroTelephone(id_numero_telephone  INT PRIMARY KEY NOT NULL AUTO_INCREMENT ,
+  numero  VARCHAR[20] ,
+  id_client FOREIGN KEY REFERENCES Client(id_client))
 
-Commande(*id_commande:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
-  date_passage: DATE, 
-  date-validation : DATE , 
-  date_arrivée : DATE , 
-  prix_total: INT, 
-  #id_status_commande: FOREIGN KEY REFERENCES StatusCommande(id_status_commande), 
-  #id_client: FOREIGN KEY REFERENCES Client(id_client))
+Commande(id_commande INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  date_passage DATE, 
+  date-validation  DATE , 
+  date_arrivée DATE , 
+  prix_total INT, 
+  #id_status_commande FOREIGN KEY REFERENCES StatusCommande(id_status_commande), 
+  #id_client FOREIGN KEY REFERENCES Client(id_client))
 
-ItemCommande(*id_item_commande:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
-  quantite:INT, 
-  prix_vendu:INT , 
-  #id_commande: FOREIGN KEY REFERENCES Commande(id_commande), 
-  #id_status_item_commande: FOREIGN KEY REFERENCES StatusItemCommande(id_status_commande, 
-  #id_article: FOREIGN KEY REFERENCES Article(id_article))
+ItemCommande(*id_item_commande INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  quantite INT, 
+  prix_vendu INT , 
+  #id_commande  FOREIGN KEY REFERENCES Commande(id_commande), 
+  #id_status_item_commande  FOREIGN KEY REFERENCES StatusItemCommande(id_status_commande, 
+  #id_article  FOREIGN KEY REFERENCES Article(id_article))
 
-Facture(*id_facture:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
-  date_facturation:DATE, 
-  frais_service:INT , 
-  frais_livraison:INT, 
-  remise:INT , 
-  prix_facture:INT , 
-  #id_commande: FOREIGN KEY REFERENCES Commande(id_commande))
+Facture(*id_facture INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  date_facturation DATE, 
+  frais_service INT , 
+  frais_livraison INT, 
+  remise INT , 
+  prix_facture INT , 
+  #id_commande  FOREIGN KEY REFERENCES Commande(id_commande))
 
-Paiement(*id_paiement:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
-  montant:INT , 
-  type_paiement: VARCHAR[20], 
-  date_paiement:DATE, 
-  #id-type_paiement:: FOREIGN KEY REFERENCES TypePaiement(id_type_paiement), 
-  #id_facture: FOREIGN KEY REFERENCES Facture(id_facture))
-  #id_commande: FOREIGN KEY REFERENCES Commande(id_commande))
+Paiement(*id_paiement INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  montant INT , 
+  type_paiement  VARCHAR[20], 
+  date_paiement DATE, 
+  #id-type_paiement FOREIGN KEY REFERENCES TypePaiement(id_type_paiement), 
+  #id_facture FOREIGN KEY REFERENCES Facture(id_facture))
+  #id_commande FOREIGN KEY REFERENCES Commande(id_commande))
 
-StatusCommande(*id_status_commande:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
-  intitule_paiement: VARCHAR[20])
+StatusCommande(*id_status_commande INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  intitule_paiement VARCHAR[20])
 
-StatusItemCommande(*id_status_item_commande:INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  intitule_status_item_commande: VARCHAR[20])
+StatusItemCommande(*id_status_item_commande INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  intitule_status_item_commande VARCHAR[20])
   
-Article(*id_article:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
-  prix_unitaire:INT, 
-  promotion:INT, 
-  valeur_points:INT , 
-  #id_status_article: FOREIGN KEY REFERENCES StatusArticle)
+Article(*id_article INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  prix_unitaire INT, 
+  promotion INT, 
+  valeur_points INT , 
+  #id_status_article  FOREIGN KEY REFERENCES StatusArticle)
   
-StatusArticle(*id_status_article:INT PRIMARY KEY NOT NULL AUTO_INCREMENT , 
-  intitule_status_article: VARCHAR[20])
+StatusArticle(*id_status_article INT PRIMARY KEY NOT NULL AUTO_INCREMENT , 
+  intitule_status_article VARCHAR[20])
 
 
 
