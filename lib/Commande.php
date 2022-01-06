@@ -46,7 +46,11 @@ class Commande
     public function afficherAppercu() {
         ?>
         <div class="accordion-item">
-            <?php $this->afficherHeader(); ?>
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-commande-<?php echo $this->id; ?>">
+                    <?php $this->afficherHeader(); ?>
+                </button>
+            </h2>
             <div id="collapse-commande-<?php echo $this->id; ?>" class="accordion-collapse collapse">
                 <div class="accordion-body">
                     <div class="row">
@@ -68,7 +72,7 @@ class Commande
         <?php
     }
 
-    private function afficherIconeStatut()
+    public function afficherIconeStatut()
     {
         switch ($this->statut) {
             case StatutCommande::attente_validation:
@@ -86,7 +90,7 @@ class Commande
         }
     }
 
-    private function afficherNomStatut()
+    public function afficherNomStatut()
     {
         switch ($this->statut) {
             case StatutCommande::attente_validation:
@@ -104,7 +108,7 @@ class Commande
         }
     }
 
-    private function afficherDerniereDate()
+    public function afficherDerniereDate()
     {
         switch ($this->statut) {
             case StatutCommande::en_cours:
@@ -118,7 +122,7 @@ class Commande
         }
     }
 
-    private function afficherArticles()
+    public function afficherArticles()
     {
         ?>
         <h4>Articles</h4>
@@ -151,7 +155,7 @@ class Commande
         <?php
     }
 
-    private function afficherInfosClient()
+    public function afficherInfosClient()
     {
         ?>
         <h4>Informations client</h4>
@@ -164,11 +168,9 @@ class Commande
         <?php
     }
 
-    private function afficherHeader()
+    public function afficherHeader()
     {
         ?>
-        <h2 class="accordion-header" id="headingOne">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-commande-<?php echo $this->id; ?>">
                 <div style="width: 20%">
                     <?php $this->afficherIconeStatut(); ?>
                     <?php $this->afficherNomStatut(); ?>
@@ -183,6 +185,41 @@ class Commande
                 <span class="badge bg-secondary ms-3">Commande #<?php echo $this->id; ?></span>
             </button>
         </h2>
+        <?php
+    }
+
+    public function afficherArticlesEdition()
+    {
+        ?>
+        <h4 class="mt-4">Articles</h4>
+        <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Produit</th>
+                    <th scope="col">Quantité</th>
+                    <th scope="col">Prix unité</th>
+                    <th scope="col">Prix total</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            foreach ($this->articles as $i => $article) {
+                $article->afficherLigneEditerCommande($this->id, $i + 1);
+            }
+            ?>
+            <tr class="table-active">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="fw-bold">Total</td>
+                <td class="fw-bold"><?php echo $this->calculerPrixTotal(); ?></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
         <?php
     }
 
@@ -203,5 +240,15 @@ class Commande
 
     public function ajouterCommentaire($commentaire) {
         $this->commentaire = $commentaire;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function recupererStatus()
+    {
+        return $this->statut;
     }
 }
