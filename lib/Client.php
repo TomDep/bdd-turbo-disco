@@ -144,4 +144,13 @@ class Client
         </div>
         <?php
     }
+
+    public function getNomPrenom() {
+        return $this->nom . " " . $this->prenom;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
 }

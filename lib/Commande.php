@@ -18,53 +18,58 @@ class Commande
 
     // Dates
     private $derniereDate = "15/11/2021";
-
     private $statut;
+    private $payee = false;
 
-    private $articles = [5632, 5632];
+    private $articles = [];
+    private $commentaire = "";
 
-    private $items;
-    private $id_client;
+    private $client;
 
-    public function __construct($id)
+    public function __construct($id, $client)
     {
         $this->id = $id;
+        $this->client = $client;
+    }
+
+    private function calculerPrixTotal()
+    {
+        $fmt = new NumberFormatter("fr_FR", NumberFormatter::CURRENCY);
+        $total = 0;
+        foreach($this->articles as $i => $article) {
+            $total += $article->recupererTotal();
+        }
+
+        return $fmt->formatCurrency($total, "EUR");
     }
 
     public function afficherAppercu() {
         ?>
         <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-commande-<?php echo $this->id; ?>">
-                    <div style="width: 20%">
-                        <?php $this->afficherIconeStatut(); ?>
-                        <?php $this->afficherNomStatut(); ?>
-                    </div>
-                    <div class="w-25">
-                        <?php $this->afficherDerniereDate(); ?>
-                    </div>
-
-                    <span class="w-25"><?php echo count($this->articles); ?> article(s)</span>
-                    <span class="badge bg-secondary ms-3">Commande #<?php echo $this->id; ?></span>
-                </button>
-            </h2>
+            <?php $this->afficherHeader(); ?>
             <div id="collapse-commande-<?php echo $this->id; ?>" class="accordion-collapse collapse">
                 <div class="accordion-body">
-                    <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    <div class="row">
+                        <div class="col"><?php $this->afficherInfosClient(); ?></div>
+                        <div class="col">
+                            <h4>Commentaire</h4>
+                            <hr>
+                            <p>
+                                <?php echo (empty($this->commentaire)) ? "Pas de commentaire" : $this->commentaire; ?>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col"><?php $this->afficherArticles(); ?></div>
+                    </div>
                 </div>
             </div>
         </div>
         <?php
     }
 
-    public function changerStatut($statut)
-    {
-        $this->statut = $statut;
-    }
-
     private function afficherIconeStatut()
     {
-
         switch ($this->statut) {
             case StatutCommande::attente_validation:
                 echo '<i class="bi bi-circle me-3" style="color: '. StatutCommande::couleur_attente_validation .'"></i>';
@@ -111,5 +116,92 @@ class Commande
                 echo '<small class="ms-3"> le '. $this->derniereDate .'</small>';
                 break;
         }
+    }
+
+    private function afficherArticles()
+    {
+        ?>
+        <h4>Articles</h4>
+        <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Produit</th>
+                    <th scope="col">Quantité</th>
+                    <th scope="col">Prix unité</th>
+                    <th scope="col">Prix total</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            foreach ($this->articles as $i => $article) {
+                $article->afficherLigneCommande($i);
+            }
+            ?>
+            <tr class="table-active">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="fw-bold">Total</td>
+                <td class="fw-bold"><?php echo $this->calculerPrixTotal(); ?></td>
+            </tr>
+            </tbody>
+        </table>
+        <?php
+    }
+
+    private function afficherInfosClient()
+    {
+        ?>
+        <h4>Informations client</h4>
+        <hr>
+        <ul class="list-group-flush">
+            <li class="list-group-item">No. client : <?php echo $this->client->getId(); ?></li>
+            <li class="list-group-item">Client : <?php echo $this->client->getNomPrenom(); ?></li>
+            <li class="list-group-item">No. client : <?php echo $this->client->getId(); ?></li>
+        </ul>
+        <?php
+    }
+
+    private function afficherHeader()
+    {
+        ?>
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-commande-<?php echo $this->id; ?>">
+                <div style="width: 20%">
+                    <?php $this->afficherIconeStatut(); ?>
+                    <?php $this->afficherNomStatut(); ?>
+                </div>
+                <div class="w-25">
+                    <?php $this->afficherDerniereDate(); ?>
+                </div>
+
+                <span class="w-25"><?php echo count($this->articles); ?> article(s)</span>
+                <span><?php echo ($this->payee) ? "payée" : "non payée"; ?></span>
+
+                <span class="badge bg-secondary ms-3">Commande #<?php echo $this->id; ?></span>
+            </button>
+        </h2>
+        <?php
+    }
+
+    /* ----- Getters & Setters ----- */
+    public function changerStatut($statut)
+    {
+        $this->statut = $statut;
+    }
+
+    public function ajouterArticle($article) {
+        $this->articles[] = $article;
+    }
+
+    public function estPayee($payee)
+    {
+        $this->payee = $payee;
+    }
+
+    public function ajouterCommentaire($commentaire) {
+        $this->commentaire = $commentaire;
     }
 }
