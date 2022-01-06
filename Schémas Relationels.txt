@@ -22,7 +22,7 @@ Contact(id_contact:INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 SoldePoint(id_solde_point INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   date_expiration  DATE, 
   quantité  INT, 
-  id_client  FOREIGN KEY REFERENCES Client(id_client), 
+   FOREIGN KEY (id_client) REFERENCES Client(id_client),
   id_valeur_point  FOREIGN KEY REFERENCES ValeurPoint(id_valeur_point))
   
 ValeurPoint(id_valeur_point:INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
@@ -34,16 +34,16 @@ Grade(id_grade INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   max_dépense  INT)
   
 NumeroTelephone(id_numero_telephone  INT PRIMARY KEY NOT NULL AUTO_INCREMENT ,
-  numero  VARCHAR[20] ,
-  id_client FOREIGN KEY REFERENCES Client(id_client))
+  numero  VARCHAR(20) ,
+  FOREIGN KEY (id_client) REFERENCES Client(id_client))
 
-Commande(id_commande INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+Commande(id_commande INT PRIMARY KEY NOT NULL AUTO_INCREMENT,                
   date_passage DATE, 
-  date-validation  DATE , 
+  date_validation  DATE , 
   date_arrivée DATE , 
   prix_total INT, 
-  #id_status_commande FOREIGN KEY REFERENCES StatusCommande(id_status_commande), 
-  #id_client FOREIGN KEY REFERENCES Client(id_client))
+  FOREIGN KEY id_status_commande REFERENCES StatusCommande(id_status_commande), 
+   FOREIGN KEY (id_client) REFERENCES Client(id_client))
 
 ItemCommande(*id_item_commande INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
   quantite INT, 
@@ -62,9 +62,7 @@ Facture(*id_facture INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 
 Paiement(*id_paiement INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
   montant INT , 
-  type_paiement  VARCHAR[20], 
   date_paiement DATE, 
-  #id-type_paiement FOREIGN KEY REFERENCES TypePaiement(id_type_paiement), 
   #id_facture FOREIGN KEY REFERENCES Facture(id_facture))
   #id_commande FOREIGN KEY REFERENCES Commande(id_commande))
 
@@ -82,6 +80,11 @@ Article(*id_article INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   
 StatusArticle(*id_status_article INT PRIMARY KEY NOT NULL AUTO_INCREMENT , 
   intitule_status_article VARCHAR[20])
+
+TypePaiement (id_type_paiement INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  id_paiement int,
+  type_paiement varchar(30),
+  FOREIGN KEY (id_paiement) REFERENCES Paiement(id_paiement))
 
 
 
