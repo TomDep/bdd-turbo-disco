@@ -136,7 +136,7 @@ class Commande
             <tbody>
             <?php
             foreach ($this->articles as $i => $article) {
-                $article->afficherLigneCommande($i);
+                $article->afficherLigneCommande($i + 1);
             }
             ?>
             <tr class="table-active">
