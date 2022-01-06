@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : jeu. 06 jan. 2022 à 13:52
+-- Généré le : jeu. 06 jan. 2022 à 15:39
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -253,7 +253,7 @@ CREATE TABLE IF NOT EXISTS `statusarticle` (
 DROP TABLE IF EXISTS `statuscommande`;
 CREATE TABLE IF NOT EXISTS `statuscommande` (
   `id_status_commande` int(11) NOT NULL AUTO_INCREMENT,
-  `intitule_paiement` varchar(20) DEFAULT NULL,
+  `intitule` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id_status_commande`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
