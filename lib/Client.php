@@ -25,22 +25,24 @@ class Client
     private $nom;
     private $prenom;
     private $grade;
-
-    private $totalDepense = 590;
+    private $total_depensé;
+    private $remise_future;
+    private $adhérant;
+    private $totalDepense;
     private $id;
 
     // Adresses
-    private $adresses = [];
+    private $adresses=[];
 
     // Numéros
-    private $numerosTel = [];
+    private $numerosTel=[];
 
     // Contact
     private $facebook;
     private $instagram;
     private $email;
 
-    public function __construct($id, $nom, $prenom, $grade, $facebook, $instagram, $email)
+    public function __construct($id, $nom, $prenom, $grade, $facebook, $instagram, $email,$total_depensé, $remise_future, $adhérant,$numero_tel)
     {
         $this->id = $id;
         $this->nom = $nom;
@@ -49,6 +51,10 @@ class Client
         $this->facebook = $facebook;
         $this->instagram = $instagram;
         $this->email = $email;
+        $this->totalDepense=$total_depensé;
+        $this->remise_future=$remise_future;
+        $this->adhérant=$adhérant;
+
     }
 
     public function ajouterNumeroTelephone($numero) {
@@ -122,7 +128,25 @@ class Client
                     <div class="col"><?php $this->afficherNumero(); ?></div>
                 </div>
             </div>
+            <div class="row">
+
+            <div class="col-3">
+                <span>Montant dépensé : <?php echo $this->totalDepense; ?> €</span>
+            </div>
+            <div class="col-3">
+                <span>Remise future : <?php echo $this->remise_future; ?> €</span>
+            </div>
+            <div class="col-3">
+                <span>Adhérant : <?php echo $this->adhérant; ?> </span>
+            </div>
+            <div class="col">
+                <a class="float-end" href="editer_fiche_client.php?id=<?php echo $this->id; ?>">Editer la fiche</a>
+            </div>
+
+
         </div>
+        </div>
+
 <?php
     }
 
@@ -132,12 +156,14 @@ class Client
             <div class="col-3">
                 <span><?php echo $this->prenom . ' ' . $this->nom; ?></span>
             </div>
+
             <div class="col-3">
-            <span>Montant dépensé : <?php echo $this->totalDepense; ?> €</span>
+                <span>Adhérant : <?php echo $this->adhérant; ?> </span>
             </div>
             <div class="col-1">
                 <span><?php echo $this->grade; ?></span>
             </div>
+
             <div class="col">
                 <a class="float-end" href="fiche_client.php?id=<?php echo $this->id; ?>">Voir la fiche</a>
             </div>
