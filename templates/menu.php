@@ -10,13 +10,13 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Clients</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="fiche_client.php">Voir fiche client</a></li>
+
                         <li><a class="dropdown-item" href="liste_clients.php">Tous les clients</a></li>
 
                         <li><hr class="dropdown-divider"></li>
 
                         <li><a class="dropdown-item" href="ajout_client.php">Ajouter un client</a></li>
-                        <li><a class="dropdown-item" href="editer_fiche_client.php">Éditer fiche client</a></li>
+
                     </ul>
                 </li>
 
