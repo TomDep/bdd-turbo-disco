@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <?php
 //paramètres de connexion à la base de données
+
 	$Server="localhost";
 	$User="root";
 	$Pwd="";
@@ -40,6 +41,16 @@ require_once "../lib/Client.php";
 
     <ul class="list-group">
     <?php
+    if(isset($_GET['supprimer'])){
+
+        $Connect->query("DELETE FROM adresse WHERE id_adresse=".$_GET['supprimer']);
+
+    }
+    if(isset($_GET['supprimer_num'])){
+
+        $Connect->query("DELETE FROM numerotelephone WHERE numero=".$_GET['supprimer_num']);
+
+    }
 
     $request = $Connect->query('SELECT * FROM `Client` ');
 	while($ligne = mysqli_fetch_array($request)){

@@ -20,7 +20,11 @@ $client1 = new Client(
     "Silver",
     "Tom de Pasquale",
     "@tom_depasquale",
-    "tomdepasquale1@gmail.com");
+    "tomdepasquale1@gmail.com",
+    0,
+    0,
+    0,
+    "0668269608");
 
 $commande1 = new Commande(86534, $client1);
 $commande1->changerStatut(StatutCommande::attente_validation);
