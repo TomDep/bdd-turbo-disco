@@ -65,7 +65,8 @@ class Client
         $this->adresses[] = $adresse;
     }
 
-    private function afficherContact() {
+
+     private function afficherContact(){
         ?>
         <h4 class="ps-5 mt-2">Contact</h4>
         <ul class="list-group-flush">
@@ -75,6 +76,7 @@ class Client
         </ul>
         <?php
     }
+
 
     private function afficherAdresse() {
         ?>
@@ -90,7 +92,11 @@ class Client
                         . $adresse->codePostal . ' '
                         . $adresse->ville; ?>
                 </li>
-            <?php } ?>
+
+
+            <?php
+
+                    } ?>
         </ul>
         <?php
     }
@@ -142,6 +148,103 @@ class Client
             <div class="col">
                 <a class="float-end" href="editer_fiche_client.php?id=<?php echo $this->id; ?>">Editer la fiche</a>
             </div>
+
+
+        </div>
+        </div>
+
+<?php
+    }
+
+    private function afficherAdresse_edition() {
+        ?>
+        <h4 class="ps-5 mt-2">
+            <?php echo (count($this->adresses) == 1) ? "Adresse" : "Adresses"; ?>
+        </h4>
+        <ul class="list-group-flush">
+            <?php foreach ($this->adresses as $adresse) {?>
+                <li class="list-group-item">
+                    <?php echo
+                        $adresse->numero . ' '
+                        . $adresse->rue . ', '
+                        . $adresse->codePostal . ' '
+                        . $adresse->ville; ?>
+                </li>
+                <li class="list-group-item">
+                    <?php
+                    $Server="localhost";
+                    $User="root";
+                    $Pwd="";
+                    $DB="entreprise";
+                    $Connect = mysqli_connect($Server, $User, $Pwd, $DB);
+
+                    $id_adresse=mysqli_fetch_array($Connect->query("SELECT id_adresse FROM adresse WHERE id_client =".$this->id." AND numero ='".$adresse->numero."' AND rue='".$adresse->rue."' AND ville = '".$adresse->ville."' AND code_postal = ".$adresse->codePostal));
+                    echo '<a href="liste_clients.php?supprimer='.$id_adresse[0].'">
+                    <input  id="submit" value="Supprimer"/></a> ' ;?>
+                </li>
+
+            <?php
+
+                    } ?>
+        </ul>
+        <?php
+    }
+
+    private function afficherNumero_edition() {
+        ?>
+        <h4 class="ps-5 mt-2">
+            <?php echo "Numéro" . ((count($this->numerosTel) == 1) ? " de téléphone" : "s de téléphone"); ?>
+        </h4>
+        <ul class="list-group-flush">
+            <?php foreach ($this->numerosTel as $numero) {?>
+                <li class="list-group-item">
+                    <i class="bi bi-telephone me-3"></i><?php echo $numero; ?>
+                </li>
+                <li class="list-group-item">
+                    <?php
+                    echo '<a href="liste_clients.php?supprimer_num='.$numero.'">
+                    <input  id="submit" value="Supprimer"/></a> ' ;?>
+                </li>
+            <?php } ?>
+
+        </ul>
+        <?php
+    }
+
+        public function afficher_edition() {
+?>
+        <div class="container border">
+            <div class="ps-5 pt-3">
+                <h2>
+                    <?php echo $this->prenom . ' ' . $this->nom; ?>
+                </h2>
+                <p class="border-bottom pb-2 w-25">
+                    Client  <?php echo $this->grade; ?>
+                </p>
+            </div>
+            <div>
+                <div class="row gx-5">
+                    <div class="col"><?php $this->afficherContact(); ?></div>
+
+                    <div class="col"><?php $this->afficherAdresse_edition(); ?></div>
+
+                    <div class="col"><?php $this->afficherNumero_edition(); ?></div>
+
+                </div>
+            </div>
+            <div class="row">
+
+            <div class="col-3">
+                <span>Montant dépensé : <?php echo $this->totalDepense; ?> €</span>
+            </div>
+            <div class="col-3">
+                <span>Remise future : <?php echo $this->remise_future; ?> €</span>
+            </div>
+            <div class="col-3">
+                <span>Adhérant : <?php echo $this->adhérant; ?> </span>
+
+            </div>
+
 
 
         </div>
