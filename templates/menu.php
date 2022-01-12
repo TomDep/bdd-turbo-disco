@@ -30,7 +30,6 @@
 
                         <li><a class="dropdown-item" href="nouvelle_commande.php">Créer une commande</a></li>
                         <li><a class="dropdown-item" href="editer_commande.php">Éditer une commande</a></li>
-                        <li><a class="dropdown-item" href="supprimer_commande.php">Supprimer une commande</a></li>
                     </ul>
                 </li>
 
