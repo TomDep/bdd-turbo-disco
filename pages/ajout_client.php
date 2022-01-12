@@ -90,20 +90,24 @@
 					}
 					else{
 
-					$requete = "INSERT INTO Client (id_grade, nom, prenom,total_depensé,remise_future,adhérent) VALUES ('".$grade."', '".$nom."', '".$prenom."',0,0,0);";
+					$requete = "INSERT INTO Client (id_grade, nom, prenom,total_depense,remise_future,adherent) VALUES ('".$grade."', '".$nom."', '".$prenom."',0,0,0);";
 					$Connect->query($requete);
-					$requete = "INSERT INTO Adresse (numéro, rue, ville,code_postal,id_client) (SELECT '".$numero_rue."', '".$nom_rue."', '".$ville."','".$code."',id_client FROM Client WHERE nom='".$nom."' AND prenom = '".$prenom."');";
+					$requete = "INSERT INTO Adresse (numero, rue, ville,code_postal,id_client) (SELECT '".$numero_rue."', '".$nom_rue."', '".$ville."','".$code."',id_client FROM Client WHERE nom='".$nom."' AND prenom = '".$prenom."');";
 					$Connect->query($requete);
+
                     $requete = "INSERT INTO Contact (email, instagram, facebook,id_client) (SELECT '".$mail."', '".$instagram."', '".$facebook."',id_client FROM Client WHERE nom='".$nom."' AND prenom = '".$prenom."');";
 					$Connect->query($requete);
-					$requete = "SELECT * FROM Client WHERE prenom = '".$prenom."' AND nom = '".$nom."' ";
-					$reponse = $Connect->query($requete);
+					$requete = "INSERT INTO numerotelephone (numero,id_client) (SELECT '".$numero_tel."',id_client FROM Client WHERE nom='".$nom."' AND prenom = '".$prenom."');";
+					$Connect->query($requete);
+					$requete = "SELECT * FROM adresse NATURAL JOIN client WHERE prenom = '".$prenom."' AND nom = '".$nom."' ";
+                    $reponse = $Connect->query($requete);
 
 					if($ligne = mysqli_fetch_array($reponse)){
 
 						echo "<p id='idPresentation'><font color='green'>Inscription validée</p>";
 
 					}
+
 					else{
 						echo "<p id='idPresentation'><font color='red'>erreur</p>";
 					}

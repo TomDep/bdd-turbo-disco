@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : jeu. 06 jan. 2022 à 15:39
+-- Généré le : sam. 08 jan. 2022 à 22:02
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -29,15 +29,25 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `adresse`;
 CREATE TABLE IF NOT EXISTS `adresse` (
-  `id_adresse` int(11) NOT NULL,
+  `id_adresse` int(11) NOT NULL AUTO_INCREMENT,
   `id_client` int(11) DEFAULT NULL,
-  `numéro` varchar(20) DEFAULT NULL,
+  `numero` varchar(20) DEFAULT NULL,
   `rue` varchar(50) DEFAULT NULL,
   `ville` varchar(20) DEFAULT NULL,
   `code_postal` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_adresse`),
   KEY `id_client` (`id_client`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `adresse`
+--
+
+INSERT INTO `adresse` (`id_adresse`, `id_client`, `numero`, `rue`, `ville`, `code_postal`) VALUES
+(1, 3, '06', 'rferf', 'rzfrzfe', 53160),
+(3, 8, '04', 'Champs ElisÃ©s', 'Paris', 75000),
+(4, 11, '06', 'ezrzer', 'rzfrzfe', 75000),
+(5, 8, '26', 'Rue jean jaures', 'Angers', 49000);
 
 -- --------------------------------------------------------
 
@@ -64,23 +74,26 @@ CREATE TABLE IF NOT EXISTS `article` (
 
 DROP TABLE IF EXISTS `client`;
 CREATE TABLE IF NOT EXISTS `client` (
-  `id_client` int(11) NOT NULL,
+  `id_client` int(11) NOT NULL AUTO_INCREMENT,
   `id_grade` int(11) DEFAULT NULL,
   `nom` varchar(20) DEFAULT NULL,
   `prenom` varchar(20) DEFAULT NULL,
-  `total_depensé` int(11) DEFAULT NULL,
+  `total_depense` int(11) DEFAULT NULL,
   `remise_future` int(11) DEFAULT NULL,
-  `adhérent` tinyint(1) DEFAULT NULL,
+  `adherent` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id_client`),
   KEY `id_grade` (`id_grade`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `client`
 --
 
-INSERT INTO `client` (`id_client`, `id_grade`, `nom`, `prenom`, `total_depensé`, `remise_future`, `adhérent`) VALUES
-(1, 1, 'oui', 'oui', 1, 1, 1);
+INSERT INTO `client` (`id_client`, `id_grade`, `nom`, `prenom`, `total_depense`, `remise_future`, `adherent`) VALUES
+(10, 1, 'Lebrun', 'Jean', 0, 0, 0),
+(3, 2, 'Guilhem', 'Guilhemmmm', 50, 0, 1),
+(8, 1, 'Matteo', 'Djerbi', 0, 0, 0),
+(11, 1, 'Lebrun', 'Guilhemmmm', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -117,7 +130,17 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `facebook` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_contact`),
   KEY `id_client` (`id_client`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `contact`
+--
+
+INSERT INTO `contact` (`id_contact`, `id_client`, `email`, `instagram`, `facebook`) VALUES
+(1, 3, 'efrer@hotmail.com', '@ddlgbt', 'Didier Lgbt'),
+(3, 8, 'Salut@gmail.com', '@mattbg53', 'Matt Bg'),
+(5, 10, 'lemec@hotmail.fr', '@jlbbb', 'Jean Lebrun'),
+(6, 11, 'zreez', 'refefr', 'mm');
 
 -- --------------------------------------------------------
 
@@ -151,14 +174,15 @@ CREATE TABLE IF NOT EXISTS `grade` (
   `min_dépense` int(11) DEFAULT NULL,
   `max_dépense` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_grade`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `grade`
 --
 
 INSERT INTO `grade` (`id_grade`, `intitule_grade`, `min_dépense`, `max_dépense`) VALUES
-(1, 'oui', 14, 18);
+(1, 'Silver', 0, 18),
+(2, 'Gold', 19, 100);
 
 -- --------------------------------------------------------
 
@@ -193,7 +217,17 @@ CREATE TABLE IF NOT EXISTS `numerotelephone` (
   `numero` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id_numero_telephone`),
   KEY `id_client` (`id_client`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `numerotelephone`
+--
+
+INSERT INTO `numerotelephone` (`id_numero_telephone`, `id_client`, `numero`) VALUES
+(1, 3, '0626356920'),
+(2, 8, '0785968555'),
+(3, 10, '0711592275'),
+(4, 11, '06');
 
 -- --------------------------------------------------------
 
@@ -253,7 +287,7 @@ CREATE TABLE IF NOT EXISTS `statusarticle` (
 DROP TABLE IF EXISTS `statuscommande`;
 CREATE TABLE IF NOT EXISTS `statuscommande` (
   `id_status_commande` int(11) NOT NULL AUTO_INCREMENT,
-  `intitule` varchar(20) DEFAULT NULL,
+  `intitule_paiement` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id_status_commande`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
