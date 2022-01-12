@@ -251,4 +251,9 @@ class Commande
     {
         return $this->statut;
     }
+
+    public function recupererArticles()
+    {
+        return $this->articles;
+    }
 }

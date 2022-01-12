@@ -3,10 +3,10 @@
 class ArticleCommande
 {
 
-    private $intitule = "";
-    private $id;
-    private $quantite;
-    private $prix_unite;
+    public $intitule = "";
+    public $id;
+    public $quantite;
+    public $prix_unite;
 
     private $fmt;
 
@@ -36,10 +36,7 @@ class ArticleCommande
         ?>
         <tr>
             <th scope="row"><?php echo $i; ?></th>
-            <td><?php echo $this->intitule; ?></td>
-            <td><?php echo $this->quantite; ?></td>
-            <td><?php echo $this->fmt->formatCurrency($this->prix_unite, "EUR"); ?></td>
-            <td><?php echo $this->fmt->formatCurrency($this->recupererTotal(), "EUR"); ?></td>
+            <?php $this->afficherInfos(); ?>
             <td>
                 <a class="link-danger"
                    href="../lib/enlever_article.php?id_commande=<?php echo $id_commande; ?>&id_article=<?php echo $this->id?>">
@@ -52,5 +49,15 @@ class ArticleCommande
 
     public function recupererTotal() {
         return $this->prix_unite * $this->quantite;
+    }
+
+    public function afficherInfos()
+    {
+        ?>
+        <td><?php echo $this->intitule; ?></td>
+        <td><?php echo $this->quantite; ?></td>
+        <td><?php echo $this->fmt->formatCurrency($this->prix_unite, "EUR"); ?></td>
+        <td><?php echo $this->fmt->formatCurrency($this->recupererTotal(), "EUR"); ?></td>
+        <?php
     }
 }

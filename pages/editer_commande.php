@@ -29,32 +29,38 @@ $commande1->ajouterArticle(new ArticleCommande(5563, "Nuxe lait corps 200ml", 2,
 ?>
 
 <div class="container p-5">
-    <div>
-        <table class="mb-3">
-            <h4>Commande <span>n°<?php echo $commande1->getId(); ?></span></h4>
-            <tr>
-                <td><?php $commande1->afficherIconeStatut(); ?></td>
-                <td><?php $commande1->afficherNomStatut(); ?></td>
-                <td><?php $commande1->afficherDerniereDate(); ?></td>
-                <td></td>
-            </tr>
-        </table>
+    <div class="row">
+        <div class="col">
+            <table class="mb-3">
+                <h4>Commande <span>n°<?php echo $commande1->getId(); ?></span></h4>
+                <tr>
+                    <td><?php $commande1->afficherIconeStatut(); ?></td>
+                    <td><?php $commande1->afficherNomStatut(); ?></td>
+                    <td><?php $commande1->afficherDerniereDate(); ?></td>
+                    <td></td>
+                </tr>
+            </table>
 
-        <?php
-        $statut = $commande1->recupererStatus();
-        switch($statut) {
-            case StatutCommande::attente_validation:
-                echo "<a href='../lib/changer_statut_commande.php?id_commande=". $commande1->getId() ."&statut_actuel=". $commande1->recupererStatus() ."' class='btn btn-secondary'>Valider la commande</a>";
-                break;
-            case StatutCommande::en_cours:
-                echo "<a href='../lib/changer_statut_commande.php?id_commande=". $commande1->getId() ."&statut_actuel=". $commande1->recupererStatus() ."' class='btn btn-secondary'>Valider que la commande a été livrée</a>";
-                break;
-        }
+            <?php
+            $statut = $commande1->recupererStatus();
+            switch($statut) {
+                case StatutCommande::attente_validation:
+                    echo "<a href='../lib/changer_statut_commande.php?id_commande=". $commande1->getId() ."&statut_actuel=". $commande1->recupererStatus() ."' class='btn btn-success'>Valider la commande</a>";
+                    break;
+                case StatutCommande::en_cours:
+                    echo "<a href='../lib/changer_statut_commande.php?id_commande=". $commande1->getId() ."&statut_actuel=". $commande1->recupererStatus() ."' class='btn btn-success'>Valider que la commande a bien été livrée</a>";
+                    break;
+            }
 
-        ?>
+            ?>
 
-        <a href="../lib/annuler_commande.php?id_commande=<?php echo $commande1->getId(); ?>" class="btn btn-danger">Annuler la commande</a>
-
+            <a href="../lib/annuler_commande.php?id_commande=<?php echo $commande1->getId(); ?>" class="btn btn-danger">Annuler la commande</a>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col">
+            <a href="generer_facture.php?id_commande=<?php echo $commande1->getId(); ?>" class="btn btn-outline-secondary">Générer la facture</a>
+        </div>
         <?php $commande1->afficherArticlesEdition(); ?>
     </div>
 </div>
