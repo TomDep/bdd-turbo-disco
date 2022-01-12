@@ -42,7 +42,7 @@ class Client
     private $instagram;
     private $email;
 
-    public function __construct($id, $nom, $prenom, $grade, $facebook, $instagram, $email,$total_depensé, $remise_future, $adhérant,$numero_tel)
+    public function __construct($id, $nom, $prenom, $grade, $facebook, $instagram, $email, $total_depensé, $remise_future, $adhérant)
     {
         $this->id = $id;
         $this->nom = $nom;

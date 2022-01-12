@@ -52,30 +52,41 @@ require_once "../lib/Client.php";
 
     }
 
-    $request = $Connect->query('SELECT * FROM `Client` ');
-	while($ligne = mysqli_fetch_array($request)){
-        $grade=mysqli_fetch_array($Connect->query("SELECT intitule_grade FROM Grade WHERE id_grade=".$ligne["id_grade"].""));
+    $query = "SELECT 
+       id_client, 
+       nom, 
+       prenom, 
+       intitule_grade, 
+       facebook, 
+       instagram, 
+       email, 
+       total_depense, 
+       remise_future, 
+       adherent 
+        FROM client NATURAL JOIN contact NATURAL JOIN numerotelephone NATURAL JOIN grade";
+    $request = $Connect->query($query);
+    if($request) {
+        while($resultat = mysqli_fetch_array($request)){
 
-        $facebook=mysqli_fetch_array($Connect->query("SELECT facebook FROM Contact WHERE id_client=".$ligne["id_client"].""));
-        $instagram=mysqli_fetch_array($Connect->query("SELECT instagram FROM Contact WHERE id_client=".$ligne["id_client"].""));
-        $mail=mysqli_fetch_array($Connect->query("SELECT email FROM Contact WHERE id_client=".$ligne["id_client"].""));
-        $numero_tel=mysqli_fetch_array($Connect->query("SELECT numero FROM numerotelephone WHERE id_client=".$ligne["id_client"].""));
-        $client = new Client(
-            $ligne["id_client"],
-            $ligne["nom"],
-            $ligne["prenom"],
-            $grade[0],
-            $facebook[0],
-            $instagram[0],
-            $mail[0],
-            $ligne["total_depense"],
-            $ligne["remise_future"],
-            $ligne["adherent"],
-            $numero_tel[0]);
-            ?>
-            <li class="list-group-item"><?php $client->afficherApercu(); ?></li><?php
+            $client = new Client(
+                $resultat["id_client"],
+                $resultat["nom"],
+                $resultat["prenom"],
+                $resultat["intitule_grade"],
+                $resultat["facebook"],
+                $resultat["instagram"],
+                $resultat["email"],
+                $resultat["total_depense"],
+                $resultat["remise_future"],
+                $resultat["adherent"])
 
-            }
+                ?>
+                <li class="list-group-item"><?php $client->afficherApercu(); ?></li><?php
+
+                }
+        } else {
+            echo '<p class="text-danger">' . $Connect->error . '</p>';
+        }
     ?>
     </ul>
 </div>

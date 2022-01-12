@@ -19,7 +19,11 @@ $client1 = new Client(
     "Silver",
     "Tom de Pasquale",
     "@tom_depasquale",
-    "tomdepasquale1@gmail.com");
+    "tomdepasquale1@gmail.com",
+    957.60,
+    0,
+    false
+);
 
 $commande1 = new Commande(86534, $client1);
 $commande1->changerStatut(StatutCommande::en_cours);
