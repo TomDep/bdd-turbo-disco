@@ -263,7 +263,7 @@ class Client
 
     public function afficher() {
 ?>
-        <div class="container border">
+        <div class="container border rounded">
             <div class="ps-5 pt-3">
                 <h2>
                     <?php echo $this->prenom . ' ' . $this->nom; ?>
@@ -279,14 +279,7 @@ class Client
                     <div class="col"><?php $this->afficherNumero(); ?></div>
                 </div>
                 <div class="row">
-                    <div class="col-auto">
-                        <h4 class="ps-5">Informations</h4>
-                        <ul class="list-group-flush">
-                            <li class="list-group-item">Montant dépensé : <?php echo $this->totalDepense; ?> €</li>
-                            <li class="list-group-item">Remise future : <?php echo $this->remise_future; ?> €</li>
-                            <li class="list-group-item">Adhérant : <?php echo ($this->adhérant) ? "Oui" : "Non"; ?></li>
-                        </ul>
-                    </div>
+                    <?php $this->afficherInformations(); ?>
                 </div>
             </div>
 
@@ -349,7 +342,7 @@ class Client
 
         public function afficher_edition() {
 ?>
-        <div class="container border">
+        <div class="container border rounded">
             <div class="ps-5 pt-3">
                 <h2>
                     <?php echo $this->prenom . ' ' . $this->nom; ?>
@@ -360,30 +353,34 @@ class Client
             </div>
             <div>
                 <div class="row gx-5">
-                    <div class="col"><?php $this->afficherContact(); ?></div>
+                    <div class="col"><?php $this->afficherContact_edition(); ?></div>
 
                     <div class="col"><?php $this->afficherAdresse_edition(); ?></div>
 
                     <div class="col"><?php $this->afficherNumero_edition(); ?></div>
-
                 </div>
             </div>
             <div class="row">
-
-            <div class="col-3">
-                <span>Montant dépensé : <?php echo $this->totalDepense; ?> €</span>
+                <?php $this->afficherInformations(); ?>
             </div>
-            <div class="col-3">
-                <span>Remise future : <?php echo $this->remise_future; ?> €</span>
-            </div>
-            <div class="col-3">
-                <span>Adhérant : <?php echo $this->adhérant; ?> </span>
-
-            </div>
-
-
-
         </div>
+        <div class="container border rounded mt-4">
+            <h4 class="ps-5 pt-3">Ajouter une adresse</h4>
+            <form class="ps-5 p-2" action="editer_fiche_client.php?id_client=<?php echo $this->id; ?>" method="POST">
+                <input type="text" placeholder="Numero de rue..." name="numero_rue" >
+                <input type="text" placeholder="Nom de rue..." name="nom_rue" >
+                <input type="text" placeholder="Ville..." name="ville" >
+                <input type="text" placeholder="Code postal..." name="code" >
+                <input class="btn-primary btn-sm" type='submit'  id='submit' value='Ajouter adresse' >
+            </form>
+
+            <hr class="ms-4 me-4">
+
+            <h4 class="ps-5 pt-1">Ajouter un numéro de téléphone</h4>
+            <form class="ps-5 p-2" action="editer_fiche_client.php?id_client=<?php echo $this->id; ?>" method="POST">
+                <input type="text" placeholder="+33 7 83 55 79 62" name="numero_tel" >
+                <input class="btn-primary btn-sm" type='submit' id='submit'  value='Ajouter un numéro de téléphone' >
+            </form>
         </div>
 
 <?php
@@ -393,7 +390,7 @@ class Client
         ?>
         <div class="row">
             <div class="col-3">
-                <span><?php echo $this->prenom . ' ' . $this->nom; ?></span>
+                <span><?php echo $this->getNomPrenom(); ?></span>
             </div>
 
             <div class="col-3">
@@ -410,6 +407,34 @@ class Client
         <?php
     }
 
+    private function afficherContact_edition()
+    {
+        ?>
+        <h4 class="ps-5 mt-2">Contact</h4>
+        <form action="editer_fiche_client.php?id_client=<?php echo $this->id; ?>" method="POST">
+            <ul class="list-group-flush">
+                <li class="list-group-item">
+                    <i class="bi bi-envelope me-3"></i>
+                    <input type="text" name="mail" value="<?php echo $this->email; ?>">
+                </li>
+                <li class="list-group-item">
+                    <i class="bi bi-facebook me-3"></i>
+                    <input type="text" name="facebook" value="<?php echo $this->facebook; ?>">
+                </li>
+                <li class="list-group-item">
+                    <i class="bi bi-instagram me-3"></i>
+                    <input type="text" name="instagram" value="<?php echo $this->instagram; ?>">
+                </li>
+            </ul>
+
+            <div style="position: fixed; bottom: 20px; right: 20px;">
+                <button class="btn btn-primary shadow-lg" type="submit">Valider les modifications</button>
+                <a class="btn btn-secondary shadow-lg" href="fiche_client.php?id_client=<?php echo $this->id;?>">Annuler les modifications</a>
+            </div>
+        </form>
+        <?php
+    }
+
     public function getNomPrenom() {
         return $this->nom . " " . $this->prenom;
     }
@@ -417,5 +442,18 @@ class Client
     public function getId()
     {
         return $this->id;
+    }
+
+    private function afficherInformations()
+    {?>
+        <div class="col-auto">
+            <h4 class="ps-5">Informations</h4>
+            <ul class="list-group-flush">
+                <li class="list-group-item">Montant dépensé : <?php echo $this->totalDepense; ?> €</li>
+                <li class="list-group-item">Remise future : <?php echo $this->remise_future; ?> €</li>
+                <li class="list-group-item">Adhérant : <?php echo ($this->adhérant) ? "Oui" : "Non"; ?></li>
+            </ul>
+        </div>
+    <?php
     }
 }
