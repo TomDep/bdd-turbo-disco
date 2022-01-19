@@ -69,6 +69,7 @@ class Commande
                 </div>
             </div>
         </div>
+        <a href="editer_commande.php?id_commande='<?php echo $this->id; ?>'"> <input type="submit" id="submit" value="Editer commande"/></a>
         <?php
     }
 
