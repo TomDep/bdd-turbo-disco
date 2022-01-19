@@ -66,7 +66,11 @@ while($ligne = mysqli_fetch_array($request)) {
 </div>
 <?php
 }
+
 ?>
+<form method="get" action="http://localhost/bdd-turbo-disco/lib/Excel.php">
+    <button type="submit">Exporter dans le fichier excel</button>
+</form>
 
 
 

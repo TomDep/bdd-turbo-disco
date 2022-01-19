@@ -73,21 +73,26 @@ while($ligne = mysqli_fetch_array($request)) {
             switch($statut) {
                 case StatutCommande::attente_validation:
                     echo "<a href='../lib/changer_statut_commande.php?id_commande=". $commande1->getId() ."&statut_actuel=". $commande1->recupererStatus() ."' class='btn btn-success'>Valider la commande</a>";
+                    echo '<a href="../lib/annuler_commande.php?id_commande=<?php echo $commande1->getId(); ?>" class="btn btn-danger">Annuler la commande</a>';
+                    echo '<a href="generer_facture.php?id_commande=<?php echo $commande1->getId(); ?>" class="btn btn-outline-secondary">Générer la facture</a>';
                     break;
                 case StatutCommande::en_cours:
                     echo "<a href='../lib/changer_statut_commande.php?id_commande=". $commande1->getId() ."&statut_actuel=". $commande1->recupererStatus() ."' class='btn btn-success'>Valider que la commande a bien été livrée</a>";
+                    echo '<a href="../lib/annuler_commande.php?id_commande=<?php echo $commande1->getId(); ?>" class="btn btn-danger">Annuler la commande</a>';
+                    echo '<a href="generer_facture.php?id_commande=<?php echo $commande1->getId(); ?>" class="btn btn-outline-secondary">Générer la facture</a>';
                     break;
+
+                case StatutCommande::annulee:
+                   break;
             }
 
             ?>
 
-            <a href="../lib/annuler_commande.php?id_commande=<?php echo $commande1->getId(); ?>" class="btn btn-danger">Annuler la commande</a>
+
         </div>
     </div>
     <div class="row mt-4">
-        <div class="col">
-            <a href="generer_facture.php?id_commande=<?php echo $commande1->getId(); ?>" class="btn btn-outline-secondary">Générer la facture</a>
-        </div>
+
         <?php $commande1->afficherArticlesEdition(); ?>
     </div>
 </div>
