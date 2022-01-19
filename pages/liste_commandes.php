@@ -13,46 +13,63 @@ require_once '../lib/Commande.php';
 require_once '../lib/Client.php';
 require_once '../lib/ArticleCommande.php';
 
-$client1 = new Client(
-    955121,
-    "De Pasquale",
-    "Tom",
-    "Silver",
-    "Tom de Pasquale",
-    "@tom_depasquale",
-    "tomdepasquale1@gmail.com",
-    0,
-    0,
-    0,
-    "0668269608");
+//paramètres de connexion à la base de données
+$Server = "localhost";
+$User = "root";
+$Pwd = "";
+$DB = "entreprise";
 
-$commande1 = new Commande(86534, $client1);
-$commande1->changerStatut(StatutCommande::attente_validation);
-$commande1->ajouterCommentaire("Cette commande est prise en charge par Tom de Pasquale.");
-$commande1->ajouterArticle(new ArticleCommande(652, "Caudalie Duo Levre Main", 1, 13.00));
-$commande1->ajouterArticle(new ArticleCommande(5563, "Nuxe lait corps 200ml", 2, 18.00));
+//connexion au serveur où se trouve la base de données
+$Connect = mysqli_connect($Server, $User, $Pwd, $DB);
 
-$commande2 = new Commande(3654156, $client1);
-$commande2->changerStatut(StatutCommande::en_cours);
+//affichage d’un message d’erreur si la connexion a été refusée
+if (!$Connect)
+    echo "Connexion à la base impossible";
 
-$commande3 = new Commande(69545, $client1);
-$commande3->changerStatut(StatutCommande::livree);
 
-$commande4 = new Commande(358654, $client1);
-$commande4->changerStatut(StatutCommande::annulee);
+session_start();
 
-$commandes = [$commande1, $commande2, $commande3, $commande4];
+
+$request=$Connect->query("SELECT * FROM commande");
+while($ligne = mysqli_fetch_array($request)) {
+    $client1 = creerClient($ligne['id_client']);
+    $commande1 = new Commande($ligne['id_commande'], $client1);
+    if ($ligne['id_status_commande'] == 1) {
+        $commande1->changerStatut(StatutCommande::en_cours);
+    }
+    if ($ligne['id_status_commande'] == 2) {
+        $commande1->changerStatut(StatutCommande::livree);
+    }
+    if ($ligne['id_status_commande'] == 3) {
+        $commande1->changerStatut(StatutCommande::annulee);
+    }
+    if ($ligne['id_status_commande'] == 4) {
+        $commande1->changerStatut(StatutCommande::attente_validation);
+    }
+
+    $commande1->ajouterCommentaire("Pas de commentaire.");
+    $request2 = $Connect->query("SELECT * FROM itemcommande WHERE id_commande=" . $ligne['id_commande']);
+    while ($ligne2 = mysqli_fetch_array($request2)) {
+        $article = mysqli_fetch_array($Connect->query("SELECT * FROM article WHERE id_article=" . $ligne2['id_article']));
+        $commande1->ajouterArticle(new ArticleCommande($article['id_article'], $article['intitule'], $ligne2['quantite'], $article['prix_unitaire']));
+    }
 ?>
-
 <div class="container p-5">
     <div class="accordion">
         <?php
-        foreach ($commandes as $commande) {
-            $commande->afficherAppercu();
-        }
+
+            $commande1->afficherAppercu();
+
         ?>
     </div>
 
 </div>
+<?php
+}
+?>
+
+
+
+
 </body>
 </html>
