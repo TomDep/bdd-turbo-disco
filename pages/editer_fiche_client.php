@@ -80,7 +80,7 @@ require_once("../lib/Client.php");
     $client->afficher_edition();
 
    ?>
-   <form action="editer_fiche_client.php?id_client=<?php echo $_GET['id'] ; ?>" method="POST">
+   <form action="editer_fiche_client.php?id_client=<?php echo $_GET['id_client'] ; ?>" method="POST">
        <h1 >INFO Client</h1>
 
                 <label><b><p >Adresse e-mail</p></b></label>
