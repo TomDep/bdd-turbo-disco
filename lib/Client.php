@@ -304,27 +304,20 @@ class Client
             <?php echo (count($this->adresses) == 1) ? "Adresse" : "Adresses"; ?>
         </h4>
         <ul class="list-group-flush">
-            <?php foreach ($this->adresses as $adresse) {?>
+            <?php foreach ($this->adresses as $i => $adresse) {?>
                 <li class="list-group-item">
+                    <p>
                     <?php echo
                         $adresse->numero . ' '
                         . $adresse->rue . ', '
                         . $adresse->codePostal . ' '
                         . $adresse->ville; ?>
-                </li>
-                <li class="list-group-item">
-                    <?php
-                    $Server="localhost";
-                    $User="root";
-                    $Pwd="";
-                    $DB="entreprise";
-                    $Connect = mysqli_connect($Server, $User, $Pwd, $DB);
 
-                    $id_adresse=mysqli_fetch_array($Connect->query("SELECT id_adresse FROM adresse WHERE id_client =".$this->id." AND numero ='".$adresse->numero."' AND rue='".$adresse->rue."' AND ville = '".$adresse->ville."' AND code_postal = ".$adresse->codePostal));
-                    echo '<a href="liste_clients.php?supprimer='.$id_adresse[0].'">
-                    <input  id="submit" value="Supprimer"/></a> ' ;?>
+                        <?php if($i != 0) { ?>
+                        <a href="editer_ficher_client.php?supprimer_adresse=<?php echo $adresse->id; ?>" type="button" class="float-end btn btn-outline-danger btn-sm">X</a>
+                        <?php } ?>
+                </p>
                 </li>
-
             <?php
 
                     } ?>
@@ -338,14 +331,15 @@ class Client
             <?php echo "Numéro" . ((count($this->numerosTel) == 1) ? " de téléphone" : "s de téléphone"); ?>
         </h4>
         <ul class="list-group-flush">
-            <?php foreach ($this->numerosTel as $numero) {?>
+            <?php foreach ($this->numerosTel as $i => $numero) {?>
                 <li class="list-group-item">
-                    <i class="bi bi-telephone me-3"></i><?php echo $numero->numero; ?>
-                </li>
-                <li class="list-group-item">
-                    <?php
-                    echo '<a href="liste_clients.php?supprimer_num='. $numero->id .'">
-                    <input  id="submit" value="Supprimer"/></a> ' ;?>
+                    <p>
+                        <i class="bi bi-telephone me-3"></i><?php echo $numero->numero; ?>
+
+                        <?php if($i != 0) { ?>
+                        <a href="editer_ficher_client.php?supprimer_numero=<?php echo $numero->id; ?>" type="button" class="float-end btn btn-outline-danger btn-sm">X</a>
+                        <?php } ?>
+                </p>
                 </li>
             <?php } ?>
 
