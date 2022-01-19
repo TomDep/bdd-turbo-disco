@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : sam. 08 jan. 2022 à 22:02
+-- Généré le : mer. 19 jan. 2022 à 13:46
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -34,20 +34,22 @@ CREATE TABLE IF NOT EXISTS `adresse` (
   `numero` varchar(20) DEFAULT NULL,
   `rue` varchar(50) DEFAULT NULL,
   `ville` varchar(20) DEFAULT NULL,
-  `code_postal` int(11) DEFAULT NULL,
+  `code_postal` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id_adresse`),
   KEY `id_client` (`id_client`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `adresse`
 --
 
 INSERT INTO `adresse` (`id_adresse`, `id_client`, `numero`, `rue`, `ville`, `code_postal`) VALUES
-(1, 3, '06', 'rferf', 'rzfrzfe', 53160),
-(3, 8, '04', 'Champs ElisÃ©s', 'Paris', 75000),
-(4, 11, '06', 'ezrzer', 'rzfrzfe', 75000),
-(5, 8, '26', 'Rue jean jaures', 'Angers', 49000);
+(4, 11, '06', 'ezrzer', 'rzfrzfe', '75000'),
+(8, 8, '06', 'Rue de la paix', 'Paris', '75000'),
+(11, 10, '05', 'ezrzer', 'ezrzer', '75000'),
+(12, 3, '26', 'Rue jean jaures', 'Angers', '49000'),
+(14, 8, '\".$num_rue.\"', '\".$nom_rue.\"', '\".$ville.\"', '\".$code.\"'),
+(15, 3, '06', 'Le tertre', 'ezrzer', '53160');
 
 -- --------------------------------------------------------
 
@@ -59,12 +61,21 @@ DROP TABLE IF EXISTS `article`;
 CREATE TABLE IF NOT EXISTS `article` (
   `id_article` int(11) NOT NULL AUTO_INCREMENT,
   `id_status_article` int(11) DEFAULT NULL,
+  `intitule` varchar(30) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `prix_unitaire` int(11) DEFAULT NULL,
   `promotion` int(11) DEFAULT NULL,
   `valeur_points` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_article`),
   KEY `id_status_article` (`id_status_article`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `article`
+--
+
+INSERT INTO `article` (`id_article`, `id_status_article`, `intitule`, `prix_unitaire`, `promotion`, `valeur_points`) VALUES
+(1, 1, 'Crème Nivea', 10, 0, 10),
+(2, 1, 'Gel Douche Garnier', 15, 0, 15);
 
 -- --------------------------------------------------------
 
@@ -83,17 +94,17 @@ CREATE TABLE IF NOT EXISTS `client` (
   `adherent` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id_client`),
   KEY `id_grade` (`id_grade`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `client`
 --
 
 INSERT INTO `client` (`id_client`, `id_grade`, `nom`, `prenom`, `total_depense`, `remise_future`, `adherent`) VALUES
-(10, 1, 'Lebrun', 'Jean', 0, 0, 0),
-(3, 2, 'Guilhem', 'Guilhemmmm', 50, 0, 1),
-(8, 1, 'Matteo', 'Djerbi', 0, 0, 0),
-(11, 1, 'Lebrun', 'Guilhemmmm', 0, 0, 0);
+(10, 2, 'Lebrun', 'Jean', 0, 0, 0),
+(3, 3, 'Djerbi', 'Matteo', 50, 0, 0),
+(8, 3, 'Bg', 'Du53', 15, 0, 0),
+(11, 1, 'Soulan', 'Guilhem', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -130,16 +141,16 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `facebook` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_contact`),
   KEY `id_client` (`id_client`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `contact`
 --
 
 INSERT INTO `contact` (`id_contact`, `id_client`, `email`, `instagram`, `facebook`) VALUES
-(1, 3, 'efrer@hotmail.com', '@ddlgbt', 'Didier Lgbt'),
-(3, 8, 'Salut@gmail.com', '@mattbg53', 'Matt Bg'),
-(5, 10, 'lemec@hotmail.fr', '@jlbbb', 'Jean Lebrun'),
+(1, 3, 'matteodjerbi@hotmail.com', '@djer_s', 'Matteo Djerbi'),
+(3, 8, 'lemec@hotmail.fr', 'mattbg53', 'mattbg'),
+(5, 10, 'matteodjerbi@hotmail.com', '@jlbbb', 'Jean Lebrun'),
 (6, 11, 'zreez', 'refefr', 'mm');
 
 -- --------------------------------------------------------
@@ -174,15 +185,16 @@ CREATE TABLE IF NOT EXISTS `grade` (
   `min_dépense` int(11) DEFAULT NULL,
   `max_dépense` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_grade`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `grade`
 --
 
 INSERT INTO `grade` (`id_grade`, `intitule_grade`, `min_dépense`, `max_dépense`) VALUES
-(1, 'Silver', 0, 18),
-(2, 'Gold', 19, 100);
+(2, 'Silver', 1, 18),
+(3, 'Gold', 19, 100),
+(1, 'Sans grade', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -217,17 +229,17 @@ CREATE TABLE IF NOT EXISTS `numerotelephone` (
   `numero` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id_numero_telephone`),
   KEY `id_client` (`id_client`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `numerotelephone`
 --
 
 INSERT INTO `numerotelephone` (`id_numero_telephone`, `id_client`, `numero`) VALUES
-(1, 3, '0626356920'),
 (2, 8, '0785968555'),
 (3, 10, '0711592275'),
-(4, 11, '06');
+(4, 11, '06'),
+(8, 3, '0668269608');
 
 -- --------------------------------------------------------
 
@@ -276,7 +288,15 @@ CREATE TABLE IF NOT EXISTS `statusarticle` (
   `id_status_article` int(11) NOT NULL AUTO_INCREMENT,
   `intitule_status_article` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id_status_article`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `statusarticle`
+--
+
+INSERT INTO `statusarticle` (`id_status_article`, `intitule_status_article`) VALUES
+(1, 'Disponible'),
+(2, 'Indisponible');
 
 -- --------------------------------------------------------
 
@@ -289,7 +309,17 @@ CREATE TABLE IF NOT EXISTS `statuscommande` (
   `id_status_commande` int(11) NOT NULL AUTO_INCREMENT,
   `intitule_paiement` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id_status_commande`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `statuscommande`
+--
+
+INSERT INTO `statuscommande` (`id_status_commande`, `intitule_paiement`) VALUES
+(1, 'Commande en cours'),
+(2, 'Commande livrée'),
+(3, 'Commande annulée'),
+(4, 'Attente validation');
 
 -- --------------------------------------------------------
 
@@ -302,7 +332,15 @@ CREATE TABLE IF NOT EXISTS `statusitemcommande` (
   `id_status_item_commande` int(11) NOT NULL AUTO_INCREMENT,
   `intitule_status_item_commande` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id_status_item_commande`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `statusitemcommande`
+--
+
+INSERT INTO `statusitemcommande` (`id_status_item_commande`, `intitule_status_item_commande`) VALUES
+(1, 'Disponible'),
+(2, 'Indisponible');
 
 -- --------------------------------------------------------
 
