@@ -16,7 +16,7 @@ abstract class StatutCommande {
 
 class Commande
 {
-    private $id;
+    public $id;
 
     // Dates
     private $derniereDate = "15/11/2021";
@@ -236,7 +236,9 @@ class Commande
         }
 
         // Get the id of the last inserted row
-        //$req = "SELECT LAST_INSERT_ID() FROM "
+        $req = "SELECT LAST_INSERT_ID()";
+        $result = $db->query($req);
+        $this->id = $result->fetch_all()[0][0];
 
         // Ajouter les articles
         foreach ($this->articles as $i => $article) {

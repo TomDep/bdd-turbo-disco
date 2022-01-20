@@ -268,7 +268,7 @@ class Client
                 <h2>
                     <?php echo $this->prenom . ' ' . $this->nom; ?>
                 </h2>
-                <p class="border-bottom pb-2 w-25">
+                <p class="border-bottom pb-2 me-5">
                     Client  <?php echo $this->grade; ?>
                 </p>
             </div>
