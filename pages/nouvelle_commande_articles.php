@@ -2,10 +2,12 @@
 require_once '../lib/Commande.php';
 require_once '../lib/Client.php';
 require_once '../lib/connexion.php';
+require_once '../lib/Utils.php';
+require_once '../lib/ArticleCommande.php';
 
 session_start();
 
-if(!isset($_POST["client_full"])) {
+if(!isset($_POST["client_full"]) && !isset($_SESSION["commande"])) {
     header('Location: nouvelle_commande.php');
     exit();
 }
@@ -35,9 +37,20 @@ if(!isset($_SESSION["commande"])) {
 
 <div class="container p-5 mt-4 rounded shadow-lg">
 
-    <h4>Ajout des articles</h4>
+    <h1 class="mb-3">Création d'une nouvelle commande</h1>
 
-    <div class="mt-5 row border rounded">
+    <h4 class="mb-3">Client : <?php
+        if(isset($_SESSION["commande"])) {
+            echo $commande->client->getNomPrenom();
+        } else {
+            echo explode('#', $_POST["client_full"])[0];
+        } ?>
+    </h4>
+
+    <a class="btn btn-primary" href="nouvelle_commande_valider.php">Créer la commande</a>
+    <a class="btn btn-secondary" href="nouvelle_commande.php?annuler_commande=1">Annuler</a>
+
+    <div class="mt-3 row border rounded">
         <div class="col">
             <h5 class="mt-3">Articles présents dans la commande</h5>
 
@@ -57,10 +70,12 @@ if(!isset($_SESSION["commande"])) {
                 <tbody>
                 <?php
                     foreach ($commande->articles as $i => $article) {
+                        echo '<tr>';
                         echo '<td>' . $article->intitule . '</td>';
                         echo '<td>' . $article->quantite . '</td>';
-                        echo '<td>' . $article->prix_unite . '</td>';
-                        echo '<td>' . $article->recupererTotal() . '</td>';
+                        echo '<td>' . formaterPrix($article->prix_unite) . '</td>';
+                        echo '<td>' . formaterPrix($article->recupererTotal()) . '</td>';
+                        echo '</tr>';
                     }
                 ?>
                 <tr class="table-active">
@@ -85,7 +100,7 @@ if(!isset($_SESSION["commande"])) {
                 </div>
             </form>
 
-            <table id="table">
+            <table id="table" class="table">
                 <thead>
                 <tr>
                     <th scope="col">Produit</th>
@@ -106,10 +121,22 @@ if(!isset($_SESSION["commande"])) {
                 }
 
                 while ($article = $result->fetch_assoc()) {
+                    echo '<tr>';
+                    echo '<form id="row-'. $article["id_article"] .'" method="GET" action="nouvelle_commande_ajouter_article.php">';
+                    echo '<input hidden name="id_article" value="'. $article["id_article"] .'">';
+
                     echo '<td>' . $article["intitule"] . '</td>';
-                    echo '<td>' . $article["prix_unitaire"] . '</td>';
-                    echo '<td><input type="number" name="quantite"></td>';
-                    echo '<td><a href="ajouter_article" onclick=\'document.getElementById("row-' . $article["id_article"] . '").submit();\'>Ajouter</a></td>';
+                    echo '<td>' . formaterPrix($article["prix_unitaire"]) . '</td>';
+                    echo '<td>' . $article["intitule_status_article"] . '</td>';
+                    echo '<td class="input-group-sm">
+                            <input required class="form-control" type="number" name="quantite" style="width: 30px; -moz-appearance: textfield;">
+                          </td>';
+                    echo '<td>
+                            <button type="submit" class="btn-outline-primary btn btn-sm">+</button>
+                          </td>';
+
+                    echo '</form>';
+                    echo '</tr>';
                 }
                 ?>
                 </tbody>

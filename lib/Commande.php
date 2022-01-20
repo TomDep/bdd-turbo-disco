@@ -1,5 +1,7 @@
 <?php
 
+require_once "connexion.php";
+
 abstract class StatutCommande {
     const attente_validation    = 0;
     const en_cours              = 1;
@@ -24,7 +26,7 @@ class Commande
     public $articles = [];
     public $commentaire = "";
 
-    private $client;
+    public $client;
 
     public function __construct($id, $client)
     {
@@ -34,13 +36,12 @@ class Commande
 
     public function calculerPrixTotal()
     {
-        $fmt = new NumberFormatter("fr_FR", NumberFormatter::CURRENCY);
         $total = 0;
         foreach($this->articles as $i => $article) {
             $total += $article->recupererTotal();
         }
 
-        return $fmt->formatCurrency($total, "EUR");
+        return $total;
     }
 
     public function afficherAppercu() {
@@ -221,6 +222,32 @@ class Commande
             </tbody>
         </table>
         <?php
+    }
+
+    public function ajouterBDD() {
+        $db = creerConnexion();
+
+        // Creation de la commande
+        $req = "INSERT INTO commande (id_status_commande, id_client, date_passage, prix_total) VALUES (1, ".
+            $this->client->id .", CURRENT_DATE, ". $this->calculerPrixTotal() .")";
+        $result = $db->query($req);
+        if(!$result) {
+            echo "<p class='text-danger'>COMMAND: " . $db->error . "</p>";
+        }
+
+        // Get the id of the last inserted row
+        //$req = "SELECT LAST_INSERT_ID() FROM "
+
+        // Ajouter les articles
+        foreach ($this->articles as $i => $article) {
+            $req = "INSERT INTO itemcommande (id_commande, id_status_item_commande, id_article, quantite, prix_vendu) 
+            VALUES (@@IDENTITY, 1, ". $article->id .", ". $article->quantite .", ". $article->prix_unite .")";
+
+            $result = $db->query($req);
+            if(!$result) {
+                echo "<p class='text-danger'>ARTICLE " .$i . ": " . $db->error . "</p>";
+            }
+        }
     }
 
     /* ----- Getters & Setters ----- */
