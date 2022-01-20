@@ -21,8 +21,8 @@ class Commande
     private $statut;
     private $payee = false;
 
-    private $articles = [];
-    private $commentaire = "";
+    public $articles = [];
+    public $commentaire = "";
 
     private $client;
 
@@ -32,7 +32,7 @@ class Commande
         $this->client = $client;
     }
 
-    private function calculerPrixTotal()
+    public function calculerPrixTotal()
     {
         $fmt = new NumberFormatter("fr_FR", NumberFormatter::CURRENCY);
         $total = 0;
