@@ -36,6 +36,10 @@ function creerCommande($id_commande) {
             $commande->ajouterArticle(new ArticleCommande($article['id_article'], $article['intitule'], $ligne2['quantite'], $article['prix_unitaire']));
         }
 
+        $ligne3 = mysqli_fetch_array( $db->query("SELECT date_passage FROM commande WHERE id_commande=" . $id_commande));
+        $commande->ajouterDerniereDate($ligne3['date_passage']);
+
+
         return $commande;
     }
 }
@@ -57,7 +61,7 @@ class Commande
     public $id;
 
     // Dates
-    private $derniereDate = "15/11/2021";
+    private $derniereDate;
     private $statut;
     private $payee = false;
 
@@ -312,6 +316,9 @@ class Commande
 
     public function ajouterCommentaire($commentaire) {
         $this->commentaire = $commentaire;
+    }
+    public function ajouterDerniereDate($derniereDate) {
+        $this->derniereDate= $derniereDate;
     }
 
     public function getId()
