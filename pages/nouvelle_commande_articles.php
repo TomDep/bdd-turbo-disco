@@ -78,12 +78,15 @@ if(!isset($_SESSION["commande"])) {
                         echo '</tr>';
                     }
                 ?>
-                <tr class="table-active">
-                    <td></td>
-                    <td></td>
-                    <td class="fw-bold">Total</td>
-                    <td class="fw-bold"><?php echo $commande->calculerPrixTotal(); ?></td>
-                </tr>
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td class="fw-bold">Total</td>
+                        <td class="fw-bold"><?php echo formaterPrix($commande->calculerPrixTotal()) ?></td>
+                    </tr>
+                </tfoot>
+
                 </tbody>
             </table>
             <?php } ?>

@@ -1,6 +1,44 @@
 <?php
 
 require_once "connexion.php";
+require_once "Client.php";
+require_once "ArticleCommande.php";
+require_once "Utils.php";
+
+function creerCommande($id_commande) {
+    $db = creerConnexion();
+    $request = $db->query("SELECT id_client, id_status_commande FROM commande WHERE id_commande = " . $id_commande);
+    while($ligne = mysqli_fetch_array($request)) {
+        $commande = new Commande($id_commande, creerClient($ligne['id_client']));
+
+        // Mise à jour du status
+        switch ($ligne["id_status_commande"]) {
+            case 1:
+                $commande->changerStatut(StatutCommande::en_cours);
+                break;
+            case 2:
+                $commande->changerStatut(StatutCommande::livree);
+                break;
+            case 3:
+                $commande->changerStatut(StatutCommande::annulee);
+                break;
+            case 4:
+                $commande->changerStatut(StatutCommande::attente_validation);
+                break;
+        }
+
+        $commande->ajouterCommentaire("Pas de commentaire.");
+
+        // Getting the articles
+        $request2 = $db->query("SELECT * FROM itemcommande WHERE id_commande=" . $id_commande);
+        while ($ligne2 = mysqli_fetch_array($request2)) {
+            $article = mysqli_fetch_array($db->query("SELECT * FROM article WHERE id_article=" . $ligne2['id_article']));
+            $commande->ajouterArticle(new ArticleCommande($article['id_article'], $article['intitule'], $ligne2['quantite'], $article['prix_unitaire']));
+        }
+
+        return $commande;
+    }
+}
 
 abstract class StatutCommande {
     const attente_validation    = 0;
@@ -144,14 +182,16 @@ class Commande
                 $article->afficherLigneCommande($i + 1);
             }
             ?>
-            <tr class="table-active">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="fw-bold">Total</td>
-                <td class="fw-bold"><?php echo $this->calculerPrixTotal(); ?></td>
-            </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="fw-bold">Total</td>
+                    <td class="fw-bold"><?php echo formaterPrix($this->calculerPrixTotal()); ?></td>
+                </tr>
+            </tfoot>
         </table>
         <?php
     }
@@ -163,8 +203,8 @@ class Commande
         <hr>
         <ul class="list-group-flush">
             <li class="list-group-item">No. client : <?php echo $this->client->getId(); ?></li>
-            <li class="list-group-item">Client : <?php echo $this->client->getNomPrenom(); ?></li>
-            <li class="list-group-item">No. client : <?php echo $this->client->getId(); ?></li>
+            <li class="list-group-item">Client : <?php echo $this->client->getNomPrenom(); ?><a class="float-end" href="fiche_client.php?id_client=<?php echo $this->client->id ?>">Voir la fiche client</a></span> </li>
+            <li class="list-group-item">Numéro de téléphone : <?php echo $this->client->numerosTel[0]->numero; ?></li>
         </ul>
         <?php
     }
@@ -211,15 +251,18 @@ class Commande
                 $article->afficherLigneEditerCommande($this->id, $i + 1);
             }
             ?>
-            <tr class="table-active">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="fw-bold">Total</td>
-                <td class="fw-bold"><?php echo $this->calculerPrixTotal(); ?></td>
-                <td></td>
-            </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="fw-bold">Total</td>
+                    <td class="fw-bold"><?php echo $this->calculerPrixTotal(); ?></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+
         </table>
         <?php
     }
@@ -228,7 +271,7 @@ class Commande
         $db = creerConnexion();
 
         // Creation de la commande
-        $req = "INSERT INTO commande (id_status_commande, id_client, date_passage, prix_total) VALUES (1, ".
+        $req = "INSERT INTO commande (id_status_commande, id_client, date_passage, prix_total) VALUES (4, ".
             $this->client->id .", CURRENT_DATE, ". $this->calculerPrixTotal() .")";
         $result = $db->query($req);
         if(!$result) {

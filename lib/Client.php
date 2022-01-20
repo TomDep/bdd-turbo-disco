@@ -155,7 +155,7 @@ class Client
     private $adresses=[];
 
     // Numéros
-    private $numerosTel=[];
+    public $numerosTel=[];
 
     // Contact
     private $facebook;
