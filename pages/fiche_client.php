@@ -29,7 +29,7 @@
 <div class="container p-5">
 <?php
 
-require_once("../lib/Client.php");
+    require_once("../lib/Client.php");
 
     $id_client = $_GET["id_client"];
     $client = creerClient($id_client);

@@ -149,7 +149,7 @@ class Client
     private $remise_future;
     private $adhérant;
     private $totalDepense;
-    private $id;
+    public $id;
 
     // Adresses
     private $adresses=[];

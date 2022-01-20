@@ -14,3 +14,15 @@
 
 <!-- Bootstrap Icon -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+<!-- jQuery library v3.5.1 -->
+<script src="../plugins/jQuery-3.5.1/jquery.min.js"></script>
+
+<!-- Table Filter -->
+<script src="../plugins/fast-table-filter-26.11.2018/jquery.tablefilter.min.js"></script>
+<script>
+    // Setup the table filter plugin
+    $(document).ready(() => {
+        $('.filter').each((i, obj) => $(obj).TableFilter());
+    });
+</script>
