@@ -40,5 +40,5 @@ while($ligne1 = mysqli_fetch_array($request2)){
 }
 
 
-header("liste_commandes.php")
+header("location: ../pages/liste_commandes");
 ?>

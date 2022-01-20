@@ -7,7 +7,7 @@
     <body>
     <?php  include("../templates/menu.php");  ?>
 
-    <?php
+    <?php/*
     require_once '../lib/Commande.php';
     require_once '../lib/Client.php';
     require_once '../lib/ArticleCommande.php';
@@ -27,7 +27,7 @@
     $commande1->ajouterArticle(new ArticleCommande(652, "Caudalie Duo Levre Main", 1, 13.00));
     $commande1->ajouterArticle(new ArticleCommande(5563, "Nuxe lait corps 200ml", 2, 18.00));
 
-    ?>
+    */?>
 
     <div class="container p-5">
 
