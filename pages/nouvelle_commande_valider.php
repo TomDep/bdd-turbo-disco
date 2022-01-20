@@ -47,6 +47,10 @@ $commande->ajouterBDD();
 
             <input type="submit" class="btn btn-primary mt-3" value="Ajouter">
         </form>
+        <form action="editer_commande.php">
+            <input hidden name="id_commande" value="<?php echo $commande->id ?>">
+            <input type="submit" class="btn btn-primary mt-3" value="Passer">
+        </form>
 
     </div>
 </div>
