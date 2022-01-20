@@ -34,22 +34,27 @@ $commande->ajouterBDD();
 
         <form method="GET" action="../lib/creer_acompte.php">
             <label class="form-label">Montant</label>
-            <input class="form-control" type="number" name="amount">
+            <input class="form-control" type="number" name="montant">
 
             <label class="form-label mt-3">Type de paiement</label>
             <select class="form-select" name="type_paiement">
-                <option value="cheque">Chèque</option>
-                <option value="especes">Espèces</option>
-                <option value="cb">Carte banquaire</option>
+                <option value="1">Chèque</option>
+                <option value="2">Espèces</option>
+                <option value="3">Carte banquaire</option>
             </select>
 
-            <input hidden name="commande_id" value="<?php echo $commande->id ?>">
+            <input hidden name="id_commande" value="<?php echo $commande->id ?>">
 
             <input type="submit" class="btn btn-primary mt-3" value="Ajouter">
         </form>
 
     </div>
 </div>
-
 </body>
 
+
+<?php
+    // Removing the command object
+    unset($_SESSION["commande"]);
+
+?>

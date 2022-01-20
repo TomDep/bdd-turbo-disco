@@ -243,7 +243,7 @@ class Commande
         // Ajouter les articles
         foreach ($this->articles as $i => $article) {
             $req = "INSERT INTO itemcommande (id_commande, id_status_item_commande, id_article, quantite, prix_vendu) 
-            VALUES (@@IDENTITY, 1, ". $article->id .", ". $article->quantite .", ". $article->prix_unite .")";
+            VALUES (". $this->id .", 1, ". $article->id .", ". $article->quantite .", ". $article->prix_unite .")";
 
             $result = $db->query($req);
             if(!$result) {
