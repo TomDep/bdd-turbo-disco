@@ -19,3 +19,4 @@ switch ($statut_actuel) {
         $connexion->query("UPDATE commande SET id_status_commande = 3 WHERE id_commande = " . $id_commande);
         break;
 }
+header("location: ../pages/liste_commandes");
