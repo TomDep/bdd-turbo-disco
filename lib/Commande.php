@@ -39,6 +39,16 @@ function creerCommande($id_commande) {
         $ligne3 = mysqli_fetch_array( $db->query("SELECT date_passage FROM commande WHERE id_commande=" . $id_commande));
         $commande->ajouterDerniereDate($ligne3['date_passage']);
 
+        // Knowing if it is paid
+        $request = $db->query("SELECT montant FROM paiement WHERE id_commande = " . $id_commande);
+        $montant_paye = 0;
+        while($paiement = $request->fetch_assoc()) {
+            $montant_paye += $paiement["montant"];
+        }
+
+        if($montant_paye >= $commande->calculerPrixTotal()) {
+            $commande->payee = true;
+        }
 
         return $commande;
     }
@@ -63,7 +73,7 @@ class Commande
     // Dates
     private $derniereDate;
     private $statut;
-    private $payee = false;
+    public $payee = false;
 
     public $articles = [];
     public $commentaire = "";
@@ -275,8 +285,8 @@ class Commande
         $db = creerConnexion();
 
         // Creation de la commande
-        $req = "INSERT INTO commande (id_status_commande, id_client, date_passage, prix_total) VALUES (4, ".
-            $this->client->id .", CURRENT_DATE, ". $this->calculerPrixTotal() .")";
+        $req = "INSERT INTO commande (id_status_commande, id_client, date_passage) VALUES (4, ".
+            $this->client->id .", CURRENT_DATE)";
         $result = $db->query($req);
         if(!$result) {
             echo "<p class='text-danger'>COMMAND: " . $db->error . "</p>";
@@ -307,11 +317,6 @@ class Commande
 
     public function ajouterArticle($article) {
         $this->articles[] = $article;
-    }
-
-    public function estPayee($payee)
-    {
-        $this->payee = $payee;
     }
 
     public function ajouterCommentaire($commentaire) {

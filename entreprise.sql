@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : jeu. 20 jan. 2022 à 20:52
+-- Généré le : ven. 21 jan. 2022 à 10:19
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -44,12 +44,12 @@ CREATE TABLE IF NOT EXISTS `adresse` (
 --
 
 INSERT INTO `adresse` (`id_adresse`, `id_client`, `numero`, `rue`, `ville`, `code_postal`) VALUES
-(4, 11, '06', 'ezrzer', 'rzfrzfe', '75000'),
+(4, 11, '06', 'Place Carnet', 'Marseille', '75000'),
 (8, 8, '06', 'Rue de la paix', 'Paris', '75000'),
-(11, 10, '05', 'ezrzer', 'ezrzer', '75000'),
+(11, 10, '05', 'Rue du Palais', 'Le Mans', '72000'),
 (12, 3, '26', 'Rue jean jaures', 'Angers', '49000'),
-(14, 8, '\".$num_rue.\"', '\".$nom_rue.\"', '\".$ville.\"', '\".$code.\"'),
-(15, 3, '06', 'Le tertre', 'ezrzer', '53160');
+(14, 8, '09', 'Rue des fontaines', 'Le Mans', '72000'),
+(15, 3, '06', 'Le tertre', 'Lieu-dit', '53160');
 
 -- --------------------------------------------------------
 
@@ -102,8 +102,8 @@ CREATE TABLE IF NOT EXISTS `client` (
 
 INSERT INTO `client` (`id_client`, `id_grade`, `nom`, `prenom`, `total_depense`, `remise_future`, `adherent`) VALUES
 (10, 2, 'Lebrun', 'Jean', 0, 0, 0),
-(3, 3, 'Djerbi', 'Matteo', 50, 0, 0),
-(8, 3, 'Bg', 'Du53', 15, 0, 0),
+(3, 3, 'Djerbi', 'Matteo', 0, 0, 0),
+(8, 3, 'Marc', 'Belin', 0, 0, 0),
 (11, 1, 'Soulan', 'Guilhem', 0, 0, 0);
 
 -- --------------------------------------------------------
@@ -119,27 +119,18 @@ CREATE TABLE IF NOT EXISTS `commande` (
   `id_client` int(11) DEFAULT NULL,
   `date_passage` date DEFAULT NULL,
   `date_validation` date DEFAULT NULL,
-  `date_arrivée` date DEFAULT NULL,
-  `prix_total` int(11) DEFAULT NULL,
-  `est_payee` int(20) NOT NULL DEFAULT '0',
+  `date_cloture` date DEFAULT NULL,
   PRIMARY KEY (`id_commande`),
   KEY `id_status_commande` (`id_status_commande`),
   KEY `id_client` (`id_client`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `commande`
 --
 
-INSERT INTO `commande` (`id_commande`, `id_status_commande`, `id_client`, `date_passage`, `date_validation`, `date_arrivée`, `prix_total`, `est_payee`) VALUES
-(1, 1, 3, '2022-01-12', '2022-01-12', NULL, 70, 1),
-(2, 1, 8, '2022-01-05', '2022-01-06', NULL, 30, 1),
-(3, 1, 3, '2022-01-20', NULL, NULL, 10, 0),
-(4, 2, 11, '2022-01-20', NULL, NULL, 175, 1),
-(5, 1, 3, '2022-01-20', NULL, NULL, 10, 1),
-(6, 1, 3, '2022-01-20', NULL, NULL, 225, 1),
-(7, 4, 3, '2022-01-20', NULL, NULL, 30, 0),
-(8, 3, 3, '2022-01-20', NULL, NULL, 0, 0);
+INSERT INTO `commande` (`id_commande`, `id_status_commande`, `id_client`, `date_passage`, `date_validation`, `date_cloture`) VALUES
+(9, 4, 3, '2022-01-21', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -231,22 +222,18 @@ CREATE TABLE IF NOT EXISTS `itemcommande` (
   KEY `id_commande` (`id_commande`),
   KEY `id_status_item_commande` (`id_status_item_commande`),
   KEY `id_article` (`id_article`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `itemcommande`
 --
 
 INSERT INTO `itemcommande` (`id_item_commande`, `id_commande`, `id_status_item_commande`, `id_article`, `quantite`, `prix_vendu`) VALUES
-(1, 1, 1, 1, 4, 10),
-(2, 1, 1, 2, 2, 15),
-(3, 2, 1, 2, 2, 15),
-(4, 3, 1, 1, 1, 10),
-(5, 4, 1, 1, 10, 10),
-(6, 4, 1, 2, 5, 15),
-(7, 5, 1, 1, 1, 10),
-(8, 6, 1, 2, 15, 15),
-(9, 7, 1, 1, 3, 10);
+(14, 9, 1, 2, 2, 15),
+(13, 9, 1, 1, 1, 10),
+(12, 0, 1, 1, 1, 10),
+(11, 0, 1, 2, 2, 15),
+(10, 0, 1, 1, 1, 10);
 
 -- --------------------------------------------------------
 
@@ -289,21 +276,15 @@ CREATE TABLE IF NOT EXISTS `paiement` (
   PRIMARY KEY (`id_paiement`),
   KEY `id_commande` (`id_commande`),
   KEY `id_type_paiement` (`id_type_paiement`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `paiement`
 --
 
 INSERT INTO `paiement` (`id_paiement`, `id_commande`, `id_type_paiement`, `montant`, `date_paiement`) VALUES
-(1, 5, 1, 10, '2022-01-20'),
-(2, 4, 2, 100, '2022-01-20'),
-(3, 6, 2, 150, '2022-01-20'),
-(4, 1, 2, 60, '2022-01-20'),
-(5, 2, 1, 20, '2022-01-20'),
-(6, 2, 2, 10, '2022-01-20'),
-(7, 4, 1, 15, '2022-01-20'),
-(8, 4, 2, 60, '2022-01-20');
+(10, 9, 3, 20, '2022-01-21'),
+(9, 0, 2, 20, '2022-01-21');
 
 -- --------------------------------------------------------
 

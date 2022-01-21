@@ -36,21 +36,23 @@ $db = creerConnexion();
                 case StatutCommande::attente_validation:
                     echo "<a href='../lib/changer_statut_commande.php?id_commande=". $commande->getId() ."&statut_actuel=". $commande->recupererStatus() ."' class='btn btn-success me-3'>Valider la commande</a>";
                     echo '<a href="../lib/annuler_commande.php?id_commande='. $commande->getId() .'" class="btn btn-danger me-3">Annuler la commande</a>';
-                    $ligne=mysqli_fetch_array($db->query("SELECT est_payee FROM commande WHERE id_commande=".$commande->getId()));
-                    if($ligne['est_payee']==0){
-                        echo '<a href="generer_facture.php?id_commande='. $commande->getId() .'" class="btn btn-outline-secondary me-3">Procéder au paiement</a>';
+
+                    if(!$commande->payee){
+                        echo '<a href="generer_facture.php?id_commande='. $commande->getId() .'" class="btn btn-outline-secondary me-3">Créer une facture</a>';
                     }
                     break;
                     case StatutCommande::en_cours:
                     echo "<a href='../lib/changer_statut_commande.php?id_commande=". $commande->getId() ."&statut_actuel=". $commande->recupererStatus() ."' class='btn btn-success me-3'>Valider que la commande a bien été livrée</a>";
                     echo '<a href="../lib/annuler_commande.php?id_commande='. $commande->getId() .'" class="btn btn-danger me-3">Annuler la commande</a>';
-                    $ligne=mysqli_fetch_array($db->query("SELECT est_payee FROM commande WHERE id_commande=".$commande->getId()));
-                    if($ligne['est_payee']==0){
-                        echo '<a href="generer_facture.php?id_commande='. $commande->getId() .'" class="btn btn-outline-secondary me-3">Procéder au paiement</a>';
+
+                    if(!$commande->payee){
+                        echo '<a href="generer_facture.php?id_commande='. $commande->getId() .'" class="btn btn-outline-secondary me-3">Créer une facture</a>';
                     }
 
                     break;
                 case StatutCommande::annulee:
+                    echo '<a href="../lib/restaurer_commande.php?id_commande='. $commande->getId() .'" class="btn btn-primary me-3">Restaurer la commande</a>';
+
                     break;
             }
             ?>
@@ -71,14 +73,16 @@ $db = creerConnexion();
             <h4>Paiement(s)</h4>
             <hr>
             <table class="table ms-4">
+                <tbody>
                 <?php
                 // Récupération de tous les paiement liés à cette commande
                 $req = "SELECT id_type_paiement, type_paiement, montant, date_paiement FROM paiement NATURAL JOIN typepaiement WHERE id_commande = " . $commande->id;
                 $result = $db->query($req);
-                $paiement_existant = false;
+                $total_paye = 0;
+
 
                 while($paiement = $result->fetch_assoc()) {
-                    $paiement_existant = true;
+                    $total_paye += $paiement["montant"];
 
                     echo '<tr>';
 
@@ -105,15 +109,28 @@ $db = creerConnexion();
                     echo '</tr>';
                 }
 
-                if(!$paiement_existant) {
-                    echo '<tr>Il n\'y a pas encore de paiement</tr>';
-                }
-                elseif (mysqli_fetch_array($db->query("SELECT est_payee FROM commande WHERE id_commande=".$_GET['id_commande']))['est_payee']==1){
-                    echo '<tr>La commande a été totalement réglée.</tr>';
-                }
-
-
                 ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="fw-bold">
+                        <?php
+                        if($total_paye == 0) {
+                            echo 'Il n\'y a pas encore de paiement';
+                        } else {
+                            if($commande->payee) {
+                                echo 'La commande a été complètement payée';
+                            } else {
+                                echo 'Il reste ' . formaterPrix($commande->calculerPrixTotal() - $total_paye) . ' a payer.';
+                            }
+                        }
+                        ?>
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

@@ -15,22 +15,32 @@
 <?php  include("../templates/menu.php");  ?>
 
 <div class="container p-5 mt-4 rounded shadow-lg">
+
+    <a class="mb-3 btn btn-outline-primary" href="../lib/Excel.php">Exporter les commandes dans un fichier CSV</a>
+
     <table class="table">
         <thead>
             <tr>
-                <th>#</th>
+                <th>ID</th>
                 <th></th>
                 <th>Status</th>
                 <th>Dernière actualisation</th>
                 <th>Nombre d'articles</th>
-                <th>    </th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
 <?php
-
 $db = creerConnexion();
-$request = $db->query("SELECT id_commande, id_client, id_status_commande FROM commande");
+
+$request = $db->query("SELECT COUNT(*) FROM commande");
+$nb_commandes = $request->fetch_all()[0][0];
+
+if($nb_commandes == 0) {
+    echo '<tr><td>Il n\'y a pas de commandes</td></tr>';
+}
+
+$request = $db->query("SELECT id_commande, id_client, id_status_commande, date_passage, date_validation, date_cloture FROM commande");
 while($ligne = mysqli_fetch_array($request)) {
     $commande = new Commande($ligne['id_commande'], creerClient($ligne['id_client']));
 
@@ -38,15 +48,19 @@ while($ligne = mysqli_fetch_array($request)) {
     switch ($ligne["id_status_commande"]) {
         case 1:
             $commande->changerStatut(StatutCommande::en_cours);
+            $commande->ajouterDerniereDate($ligne["date_validation"]);
             break;
         case 2:
             $commande->changerStatut(StatutCommande::livree);
+            $commande->ajouterDerniereDate($ligne["date_cloture"]);
             break;
         case 3:
             $commande->changerStatut(StatutCommande::annulee);
+            $commande->ajouterDerniereDate($ligne["date_cloture"]);
             break;
         case 4:
             $commande->changerStatut(StatutCommande::attente_validation);
+            $commande->ajouterDerniereDate($ligne["date_passage"]);
             break;
     }
 
@@ -73,10 +87,6 @@ while($ligne = mysqli_fetch_array($request)) {
         </tbody>
     </table>
 </div>
-
-<form method="get" action="http://localhost/bdd-turbo-disco/lib/Excel.php">
-    <button type="submit">Exporter dans le fichier excel</button>
-</form>
 
 </body>
 </html>

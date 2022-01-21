@@ -23,13 +23,11 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Commandes</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="commande.php">Voir une commande</a></li>
                         <li><a class="dropdown-item" href="liste_commandes.php">Toutes les commandes</a></li>
 
                         <li><hr class="dropdown-divider"></li>
 
                         <li><a class="dropdown-item" href="nouvelle_commande.php">Créer une commande</a></li>
-                        <li><a class="dropdown-item" href="editer_commande.php">Éditer une commande</a></li>
                     </ul>
                 </li>
 

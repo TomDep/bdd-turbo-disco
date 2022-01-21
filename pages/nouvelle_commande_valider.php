@@ -4,11 +4,16 @@ require_once '../lib/Commande.php';
 require_once '../lib/ArticleCommande.php';
 require_once '../lib/Client.php';
 require_once '../lib/Utils.php';
+require_once '../lib/connexion.php';
 
 session_start();
 
 $commande = $_SESSION["commande"];
-$commande->ajouterBDD();
+
+$db = creerConnexion();
+if(!$commande->ajouterBDD()) {
+    echo '<p>Erreur : ' . $db->error . '</p>';
+}
 
 ?>
 
@@ -38,22 +43,21 @@ $commande->ajouterBDD();
 
             <label class="form-label mt-3">Type de paiement</label>
             <select class="form-select" name="type_paiement">
+                <option value="3">Carte banquaire</option>
                 <option value="1">Chèque</option>
                 <option value="2">Espèces</option>
-                <option value="3">Carte banquaire</option>
             </select>
 
             <input hidden name="id_commande" value="<?php echo $commande->id ?>">
 
             <input type="submit" class="btn btn-primary mt-3" value="Ajouter">
         </form>
-        <form action="editer_commande.php">
-            <input hidden name="id_commande" value="<?php echo $commande->id ?>">
-            <input type="submit" class="btn btn-primary mt-3" value="Passer">
-        </form>
-
     </div>
+
+    <a class="btn btn-secondary" href="commande.php?id_commande=<?php echo $commande->id ?>">Visualiser la commande</a>
+
 </div>
+
 </body>
 
 

@@ -47,7 +47,14 @@ if(!isset($_SESSION["commande"])) {
         } ?>
     </h4>
 
-    <a class="btn btn-primary" href="nouvelle_commande_valider.php">Créer la commande</a>
+    <?php
+    if(count($commande->articles) > 0) {
+        echo '<a class="btn btn-primary" href="nouvelle_commande_valider.php">Créer la commande</a>';
+    } else {
+        echo '<a class="disabled btn btn-primary" href="nouvelle_commande_valider.php">Créer la commande</a>';
+    }
+    ?>
+
     <a class="btn btn-secondary" href="nouvelle_commande.php?annuler_commande=1">Annuler</a>
 
     <div class="mt-3 row border rounded">
