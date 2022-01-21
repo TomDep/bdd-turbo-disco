@@ -12,63 +12,52 @@
     require_once '../lib/Client.php';
     require_once '../lib/ArticleCommande.php';
 
-    $client1 = new Client(
-        955121,
-        "De Pasquale",
-        "Tom",
-        "Silver",
-        "Tom de Pasquale",
-        "@tom_depasquale",
-        "tomdepasquale1@gmail.com");
+    $Connect = creerConnexion();
+    $ligne=mysqli_fetch_array($Connect->query("SELECT id_client FROM commande WHERE id_commande=".$_GET['id_commande']));
+    $client1 = creerClient($ligne[0]);
 
-    $commande1 = new Commande(86534, $client1);
-    $commande1->changerStatut(StatutCommande::en_cours);
-    $commande1->ajouterCommentaire("Cette commande est prise en charge par Tom de Pasquale.");
-    $commande1->ajouterArticle(new ArticleCommande(652, "Caudalie Duo Levre Main", 1, 13.00));
-    $commande1->ajouterArticle(new ArticleCommande(5563, "Nuxe lait corps 200ml", 2, 18.00));
+    $commande= new Commande($_GET['id_commande'],$client1);
 
     ?>
 
-    <div class="container p-5">
 
-        <h1>Création d'une facture</h1>
 
-        <hr>
 
-        <div>
-            <h4>Sélection des articles</h4>
+    <div class="container p-5 mt-4 rounded shadow-lg">
+        <h1>Commande n°<?php echo $commande->id ?> </h1>
 
-            <form action="../lib/generer_facture.php" method="post">
+        <div class="border rounded mt-3 p-3">
+            <h4>Ajouter un acompte :</h4>
 
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Sélectionner</th>
-                            <th>Produit</th>
-                            <th>Quantité</th>
-                            <th>Prix unitaire</th>
-                            <th>Prix total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
+            <p>Le montant total de la commande est de <span class="fw-bold"><?php echo mysqli_fetch_array($Connect->query("SELECT prix_total FROM commande WHERE id_commande=".$_GET['id_commande']))['prix_total'] ?> €</span>
+                <br>
+                Vous ne pouvez pas déposer d'acompte avec les points de fidélité.
+            </p>
 
-                        $articles = $commande1->recupererArticles();
-                        foreach ($articles as $i => $article) {
-                            echo "<tr>";
-                            echo "<td><input name='". $article->id ."' type='checkbox' checked></td>";
-                            $article->afficherInfos();
-                            echo "</tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
+            <form method="GET" action="../lib/creer_acompte.php">
+                <label class="form-label">Montant</label>
+                <input class="form-control" type="number" name="montant">
 
-                <button class="btn btn-primary" type="submit">Générer la facture</button>
+                <label class="form-label mt-3">Type de paiement</label>
+                <select class="form-select" name="type_paiement">
+                    <option value="1">Chèque</option>
+                    <option value="2">Espèces</option>
+                    <option value="3">Carte banquaire</option>
+                </select>
+
+                <input hidden name="id_commande" value="<?php echo $commande->id ?>">
+
+                <input type="submit" class="btn btn-primary mt-3" value="Ajouter">
             </form>
+            <form action="editer_commande.php">
+                <input hidden name="id_commande" value="<?php echo $commande->id ?>">
+                <input type="submit" class="btn btn-primary mt-3" value="Passer">
+            </form>
+
         </div>
-
     </div>
-
     </body>
+
+
+
 </html>

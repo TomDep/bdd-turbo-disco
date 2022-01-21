@@ -1,5 +1,49 @@
 <?php
 
+require_once "connexion.php";
+require_once "Client.php";
+require_once "ArticleCommande.php";
+require_once "Utils.php";
+
+function creerCommande($id_commande) {
+    $db = creerConnexion();
+    $request = $db->query("SELECT id_client, id_status_commande FROM commande WHERE id_commande = " . $id_commande);
+    while($ligne = mysqli_fetch_array($request)) {
+        $commande = new Commande($id_commande, creerClient($ligne['id_client']));
+
+        // Mise à jour du status
+        switch ($ligne["id_status_commande"]) {
+            case 1:
+                $commande->changerStatut(StatutCommande::en_cours);
+                break;
+            case 2:
+                $commande->changerStatut(StatutCommande::livree);
+                break;
+            case 3:
+                $commande->changerStatut(StatutCommande::annulee);
+                break;
+            case 4:
+                $commande->changerStatut(StatutCommande::attente_validation);
+                break;
+        }
+
+        $commande->ajouterCommentaire("Pas de commentaire.");
+
+        // Getting the articles
+        $request2 = $db->query("SELECT * FROM itemcommande WHERE id_commande=" . $id_commande);
+        while ($ligne2 = mysqli_fetch_array($request2)) {
+            $article = mysqli_fetch_array($db->query("SELECT * FROM article WHERE id_article=" . $ligne2['id_article']));
+            $commande->ajouterArticle(new ArticleCommande($article['id_article'], $article['intitule'], $ligne2['quantite'], $article['prix_unitaire']));
+        }
+
+        $ligne3 = mysqli_fetch_array( $db->query("SELECT date_passage FROM commande WHERE id_commande=" . $id_commande));
+        $commande->ajouterDerniereDate($ligne3['date_passage']);
+
+
+        return $commande;
+    }
+}
+
 abstract class StatutCommande {
     const attente_validation    = 0;
     const en_cours              = 1;
@@ -14,17 +58,17 @@ abstract class StatutCommande {
 
 class Commande
 {
-    private $id;
+    public $id;
 
     // Dates
-    private $derniereDate = "15/11/2021";
+    private $derniereDate;
     private $statut;
     private $payee = false;
 
-    private $articles = [];
-    private $commentaire = "";
+    public $articles = [];
+    public $commentaire = "";
 
-    private $client;
+    public $client;
 
     public function __construct($id, $client)
     {
@@ -32,15 +76,14 @@ class Commande
         $this->client = $client;
     }
 
-    private function calculerPrixTotal()
+    public function calculerPrixTotal()
     {
-        $fmt = new NumberFormatter("fr_FR", NumberFormatter::CURRENCY);
         $total = 0;
         foreach($this->articles as $i => $article) {
             $total += $article->recupererTotal();
         }
 
-        return $fmt->formatCurrency($total, "EUR");
+        return $total;
     }
 
     public function afficherAppercu() {
@@ -143,14 +186,16 @@ class Commande
                 $article->afficherLigneCommande($i + 1);
             }
             ?>
-            <tr class="table-active">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="fw-bold">Total</td>
-                <td class="fw-bold"><?php echo $this->calculerPrixTotal(); ?></td>
-            </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="fw-bold">Total</td>
+                    <td class="fw-bold"><?php echo formaterPrix($this->calculerPrixTotal()); ?></td>
+                </tr>
+            </tfoot>
         </table>
         <?php
     }
@@ -162,8 +207,8 @@ class Commande
         <hr>
         <ul class="list-group-flush">
             <li class="list-group-item">No. client : <?php echo $this->client->getId(); ?></li>
-            <li class="list-group-item">Client : <?php echo $this->client->getNomPrenom(); ?></li>
-            <li class="list-group-item">No. client : <?php echo $this->client->getId(); ?></li>
+            <li class="list-group-item">Client : <?php echo $this->client->getNomPrenom(); ?><a class="float-end" href="fiche_client.php?id_client=<?php echo $this->client->id ?>">Voir la fiche client</a></span> </li>
+            <li class="list-group-item">Numéro de téléphone : <?php echo $this->client->numerosTel[0]->numero; ?></li>
         </ul>
         <?php
     }
@@ -210,17 +255,48 @@ class Commande
                 $article->afficherLigneEditerCommande($this->id, $i + 1);
             }
             ?>
-            <tr class="table-active">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="fw-bold">Total</td>
-                <td class="fw-bold"><?php echo $this->calculerPrixTotal(); ?></td>
-                <td></td>
-            </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="fw-bold">Total</td>
+                    <td class="fw-bold"><?php echo $this->calculerPrixTotal(); ?></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+
         </table>
         <?php
+    }
+
+    public function ajouterBDD() {
+        $db = creerConnexion();
+
+        // Creation de la commande
+        $req = "INSERT INTO commande (id_status_commande, id_client, date_passage, prix_total) VALUES (4, ".
+            $this->client->id .", CURRENT_DATE, ". $this->calculerPrixTotal() .")";
+        $result = $db->query($req);
+        if(!$result) {
+            echo "<p class='text-danger'>COMMAND: " . $db->error . "</p>";
+        }
+
+        // Get the id of the last inserted row
+        $req = "SELECT LAST_INSERT_ID()";
+        $result = $db->query($req);
+        $this->id = $result->fetch_all()[0][0];
+
+        // Ajouter les articles
+        foreach ($this->articles as $i => $article) {
+            $req = "INSERT INTO itemcommande (id_commande, id_status_item_commande, id_article, quantite, prix_vendu) 
+            VALUES (". $this->id .", 1, ". $article->id .", ". $article->quantite .", ". $article->prix_unite .")";
+
+            $result = $db->query($req);
+            if(!$result) {
+                echo "<p class='text-danger'>ARTICLE " .$i . ": " . $db->error . "</p>";
+            }
+        }
     }
 
     /* ----- Getters & Setters ----- */
@@ -240,6 +316,9 @@ class Commande
 
     public function ajouterCommentaire($commentaire) {
         $this->commentaire = $commentaire;
+    }
+    public function ajouterDerniereDate($derniereDate) {
+        $this->derniereDate= $derniereDate;
     }
 
     public function getId()

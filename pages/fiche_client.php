@@ -7,10 +7,10 @@
 	$DB="entreprise";
 
 	//connexion au serveur où se trouve la base de données
-	$Connect = mysqli_connect($Server, $User, $Pwd, $DB);
+	$db = mysqli_connect($Server, $User, $Pwd, $DB);
 
 	//affichage d’un message d’erreur si la connexion a été refusée
-	if (!$Connect)
+	if (!$db)
 		echo "Connexion à la base impossible";
 
 
@@ -29,7 +29,7 @@
 <div class="container p-5">
 <?php
 
-require_once("../lib/Client.php");
+    require_once("../lib/Client.php");
 
     $id_client = $_GET["id_client"];
     $client = creerClient($id_client);

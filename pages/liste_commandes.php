@@ -1,3 +1,10 @@
+<?php
+    require_once '../lib/Commande.php';
+    require_once '../lib/Client.php';
+    require_once '../lib/ArticleCommande.php';
+    require_once '../lib/connexion.php';
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,69 +14,69 @@
 <body>
 <?php  include("../templates/menu.php");  ?>
 
+<div class="container p-5 mt-4 rounded shadow-lg">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th></th>
+                <th>Status</th>
+                <th>Dernière actualisation</th>
+                <th>Nombre d'articles</th>
+                <th>    </th>
+            </tr>
+        </thead>
+        <tbody>
 <?php
 
-require_once '../lib/Commande.php';
-require_once '../lib/Client.php';
-require_once '../lib/ArticleCommande.php';
-
-//paramètres de connexion à la base de données
-$Server = "localhost";
-$User = "root";
-$Pwd = "";
-$DB = "entreprise";
-
-//connexion au serveur où se trouve la base de données
-$Connect = mysqli_connect($Server, $User, $Pwd, $DB);
-
-//affichage d’un message d’erreur si la connexion a été refusée
-if (!$Connect)
-    echo "Connexion à la base impossible";
-
-
-session_start();
-
-
-$request=$Connect->query("SELECT * FROM commande");
+$db = creerConnexion();
+$request = $db->query("SELECT id_commande, id_client, id_status_commande FROM commande");
 while($ligne = mysqli_fetch_array($request)) {
-    $client1 = creerClient($ligne['id_client']);
-    $commande1 = new Commande($ligne['id_commande'], $client1);
-    if ($ligne['id_status_commande'] == 1) {
-        $commande1->changerStatut(StatutCommande::en_cours);
-    }
-    if ($ligne['id_status_commande'] == 2) {
-        $commande1->changerStatut(StatutCommande::livree);
-    }
-    if ($ligne['id_status_commande'] == 3) {
-        $commande1->changerStatut(StatutCommande::annulee);
-    }
-    if ($ligne['id_status_commande'] == 4) {
-        $commande1->changerStatut(StatutCommande::attente_validation);
+    $commande = new Commande($ligne['id_commande'], creerClient($ligne['id_client']));
+
+    // Mise à jour du status
+    switch ($ligne["id_status_commande"]) {
+        case 1:
+            $commande->changerStatut(StatutCommande::en_cours);
+            break;
+        case 2:
+            $commande->changerStatut(StatutCommande::livree);
+            break;
+        case 3:
+            $commande->changerStatut(StatutCommande::annulee);
+            break;
+        case 4:
+            $commande->changerStatut(StatutCommande::attente_validation);
+            break;
     }
 
-    $commande1->ajouterCommentaire("Pas de commentaire.");
-    $request2 = $Connect->query("SELECT * FROM itemcommande WHERE id_commande=" . $ligne['id_commande']);
+    $commande->ajouterCommentaire("Pas de commentaire.");
+
+    // Getting the articles
+    $request2 = $db->query("SELECT * FROM itemcommande WHERE id_commande=" . $ligne['id_commande']);
     while ($ligne2 = mysqli_fetch_array($request2)) {
-        $article = mysqli_fetch_array($Connect->query("SELECT * FROM article WHERE id_article=" . $ligne2['id_article']));
-        $commande1->ajouterArticle(new ArticleCommande($article['id_article'], $article['intitule'], $ligne2['quantite'], $article['prix_unitaire']));
+        $article = mysqli_fetch_array($db->query("SELECT * FROM article WHERE id_article=" . $ligne2['id_article']));
+        $commande->ajouterArticle(new ArticleCommande($article['id_article'], $article['intitule'], $ligne2['quantite'], $article['prix_unitaire']));
     }
 ?>
-<div class="container p-5">
-    <div class="accordion">
-        <?php
-
-            $commande1->afficherAppercu();
-
-        ?>
-    </div>
-
-</div>
+            <tr>
+                <td><span class="badge bg-secondary ms-3">#<?php echo $commande->id; ?></span></td>
+                <td><?php echo $commande->afficherIconeStatut(); ?></td>
+                <td><?php echo $commande->afficherNomStatut(); ?></td>
+                <td><?php echo $commande->afficherDerniereDate(); ?></td>
+                <td><?php echo count($commande->articles); ?> article(s)</td>
+                <td><a href="commande.php?id_commande=<?php echo $commande->id ?>">Voir</a></td>
+            </tr>
 <?php
 }
 ?>
+        </tbody>
+    </table>
+</div>
 
-
-
+<form method="get" action="http://localhost/bdd-turbo-disco/lib/Excel.php">
+    <button type="submit">Exporter dans le fichier excel</button>
+</form>
 
 </body>
 </html>

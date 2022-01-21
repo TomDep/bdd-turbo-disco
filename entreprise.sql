@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 19 jan. 2022 à 15:47
+-- Généré le : jeu. 20 jan. 2022 à 20:52
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -121,18 +121,25 @@ CREATE TABLE IF NOT EXISTS `commande` (
   `date_validation` date DEFAULT NULL,
   `date_arrivée` date DEFAULT NULL,
   `prix_total` int(11) DEFAULT NULL,
+  `est_payee` int(20) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_commande`),
   KEY `id_status_commande` (`id_status_commande`),
   KEY `id_client` (`id_client`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `commande`
 --
 
-INSERT INTO `commande` (`id_commande`, `id_status_commande`, `id_client`, `date_passage`, `date_validation`, `date_arrivée`, `prix_total`) VALUES
-(1, 1, 3, '2022-01-12', '2022-01-12', NULL, 70),
-(2, 1, 8, '2022-01-05', '2022-01-06', NULL, 30);
+INSERT INTO `commande` (`id_commande`, `id_status_commande`, `id_client`, `date_passage`, `date_validation`, `date_arrivée`, `prix_total`, `est_payee`) VALUES
+(1, 1, 3, '2022-01-12', '2022-01-12', NULL, 70, 1),
+(2, 1, 8, '2022-01-05', '2022-01-06', NULL, 30, 1),
+(3, 1, 3, '2022-01-20', NULL, NULL, 10, 0),
+(4, 2, 11, '2022-01-20', NULL, NULL, 175, 1),
+(5, 1, 3, '2022-01-20', NULL, NULL, 10, 1),
+(6, 1, 3, '2022-01-20', NULL, NULL, 225, 1),
+(7, 4, 3, '2022-01-20', NULL, NULL, 30, 0),
+(8, 3, 3, '2022-01-20', NULL, NULL, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -171,12 +178,14 @@ DROP TABLE IF EXISTS `facture`;
 CREATE TABLE IF NOT EXISTS `facture` (
   `id_facture` int(11) NOT NULL AUTO_INCREMENT,
   `id_commande` int(11) DEFAULT NULL,
+  `id_paiement` int(11) DEFAULT NULL,
   `date_facturation` date DEFAULT NULL,
   `frais_service` int(11) DEFAULT NULL,
   `frais_livraison` int(11) DEFAULT NULL,
   `remise` int(11) DEFAULT NULL,
   `prix_facture` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_facture`),
+  UNIQUE KEY `id_paiement` (`id_paiement`),
   KEY `id_commande` (`id_commande`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -222,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `itemcommande` (
   KEY `id_commande` (`id_commande`),
   KEY `id_status_item_commande` (`id_status_item_commande`),
   KEY `id_article` (`id_article`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `itemcommande`
@@ -231,7 +240,13 @@ CREATE TABLE IF NOT EXISTS `itemcommande` (
 INSERT INTO `itemcommande` (`id_item_commande`, `id_commande`, `id_status_item_commande`, `id_article`, `quantite`, `prix_vendu`) VALUES
 (1, 1, 1, 1, 4, 10),
 (2, 1, 1, 2, 2, 15),
-(3, 2, 1, 2, 2, 15);
+(3, 2, 1, 2, 2, 15),
+(4, 3, 1, 1, 1, 10),
+(5, 4, 1, 1, 10, 10),
+(6, 4, 1, 2, 5, 15),
+(7, 5, 1, 1, 1, 10),
+(8, 6, 1, 2, 15, 15),
+(9, 7, 1, 1, 3, 10);
 
 -- --------------------------------------------------------
 
@@ -267,14 +282,28 @@ INSERT INTO `numerotelephone` (`id_numero_telephone`, `id_client`, `numero`) VAL
 DROP TABLE IF EXISTS `paiement`;
 CREATE TABLE IF NOT EXISTS `paiement` (
   `id_paiement` int(11) NOT NULL AUTO_INCREMENT,
-  `id_facture` int(11) DEFAULT NULL,
   `id_commande` int(11) DEFAULT NULL,
+  `id_type_paiement` int(20) NOT NULL,
   `montant` int(11) DEFAULT NULL,
   `date_paiement` date DEFAULT NULL,
   PRIMARY KEY (`id_paiement`),
-  KEY `id_facture` (`id_facture`),
-  KEY `id_commande` (`id_commande`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  KEY `id_commande` (`id_commande`),
+  KEY `id_type_paiement` (`id_type_paiement`)
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `paiement`
+--
+
+INSERT INTO `paiement` (`id_paiement`, `id_commande`, `id_type_paiement`, `montant`, `date_paiement`) VALUES
+(1, 5, 1, 10, '2022-01-20'),
+(2, 4, 2, 100, '2022-01-20'),
+(3, 6, 2, 150, '2022-01-20'),
+(4, 1, 2, 60, '2022-01-20'),
+(5, 2, 1, 20, '2022-01-20'),
+(6, 2, 2, 10, '2022-01-20'),
+(7, 4, 1, 15, '2022-01-20'),
+(8, 4, 2, 60, '2022-01-20');
 
 -- --------------------------------------------------------
 
@@ -368,11 +397,18 @@ INSERT INTO `statusitemcommande` (`id_status_item_commande`, `intitule_status_it
 DROP TABLE IF EXISTS `typepaiement`;
 CREATE TABLE IF NOT EXISTS `typepaiement` (
   `id_type_paiement` int(11) NOT NULL AUTO_INCREMENT,
-  `id_paiement` int(11) DEFAULT NULL,
   `type_paiement` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`id_type_paiement`),
-  KEY `id_paiement` (`id_paiement`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id_type_paiement`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `typepaiement`
+--
+
+INSERT INTO `typepaiement` (`id_type_paiement`, `type_paiement`) VALUES
+(1, 'Cheque'),
+(2, 'Espece'),
+(3, 'Carte bancaire');
 
 -- --------------------------------------------------------
 
