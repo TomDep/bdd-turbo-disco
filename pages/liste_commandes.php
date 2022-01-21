@@ -16,7 +16,9 @@
 
 <div class="container p-5 mt-4 rounded shadow-lg">
 
-    <a class="mb-3 btn btn-outline-primary" href="../lib/Excel.php">Exporter les commandes dans un fichier CSV</a>
+    <a class="mb-3 btn btn-outline-primary" href="../lib/Excel.php">
+        <i class="bi bi-box-arrow-down me-2"></i>
+        Exporter les commandes dans un fichier CSV</a>
 
     <table class="table">
         <thead>

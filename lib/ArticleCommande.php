@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Utils.php';
+
 class ArticleCommande
 {
 
@@ -8,16 +10,12 @@ class ArticleCommande
     public $quantite;
     public $prix_unite;
 
-    private $fmt;
-
     public function __construct($id, $intitule, $quantite, $prix_unite)
     {
         $this->id = $id;
         $this->intitule = $intitule;
         $this->quantite = $quantite;
         $this->prix_unite = $prix_unite;
-
-        $this->fmt = new NumberFormatter("fr_FR", NumberFormatter::CURRENCY);
     }
 
     public function afficherLigneCommande($i) {
@@ -26,8 +24,8 @@ class ArticleCommande
             <th scope="row"><?php echo $i; ?></th>
             <td><?php echo $this->intitule; ?></td>
             <td><?php echo $this->quantite; ?></td>
-            <td><?php echo $this->fmt->formatCurrency($this->prix_unite, "EUR"); ?></td>
-            <td><?php echo $this->fmt->formatCurrency($this->recupererTotal(), "EUR"); ?></td>
+            <td><?php echo formaterPrix($this->prix_unite); ?></td>
+            <td><?php echo formaterPrix($this->recupererTotal()); ?></td>
         </tr>
         <?php
     }
@@ -51,13 +49,4 @@ class ArticleCommande
         return $this->prix_unite * $this->quantite;
     }
 
-    public function afficherInfos()
-    {
-        ?>
-        <td><?php echo $this->intitule; ?></td>
-        <td><?php echo $this->quantite; ?></td>
-        <td><?php echo $this->fmt->formatCurrency($this->prix_unite, "EUR"); ?></td>
-        <td><?php echo $this->fmt->formatCurrency($this->recupererTotal(), "EUR"); ?></td>
-        <?php
-    }
 }
