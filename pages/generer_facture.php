@@ -12,8 +12,8 @@
     require_once '../lib/Client.php';
     require_once '../lib/ArticleCommande.php';
 
-    $Connect = creerConnexion();
-    $ligne=mysqli_fetch_array($Connect->query("SELECT id_client FROM commande WHERE id_commande=".$_GET['id_commande']));
+    $db = creerConnexion();
+    $ligne=mysqli_fetch_array($db->query("SELECT id_client FROM commande WHERE id_commande=".$_GET['id_commande']));
     $client1 = creerClient($ligne[0]);
 
     $commande= new Commande($_GET['id_commande'],$client1);
@@ -29,7 +29,7 @@
         <div class="border rounded mt-3 p-3">
             <h4>Ajouter un acompte :</h4>
 
-            <p>Le montant total de la commande est de <span class="fw-bold"><?php echo mysqli_fetch_array($Connect->query("SELECT prix_total FROM commande WHERE id_commande=".$_GET['id_commande']))['prix_total'] ?> €</span>
+            <p>Le montant total de la commande est de <span class="fw-bold"><?php echo mysqli_fetch_array($db->query("SELECT prix_total FROM commande WHERE id_commande=".$_GET['id_commande']))['prix_total'] ?> €</span>
                 <br>
                 Vous ne pouvez pas déposer d'acompte avec les points de fidélité.
             </p>

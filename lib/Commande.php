@@ -216,7 +216,7 @@ class Commande
         <h4>Informations client</h4>
         <hr>
         <ul class="list-group-flush">
-            <li class="list-group-item">No. client : <?php echo $this->client->getId(); ?></li>
+            <li class="list-group-item">No. client : <?php echo $this->client->id; ?></li>
             <li class="list-group-item">Client : <?php echo $this->client->getNomPrenom(); ?><a class="float-end" href="fiche_client.php?id_client=<?php echo $this->client->id ?>">Voir la fiche client</a></span> </li>
             <li class="list-group-item">Numéro de téléphone : <?php echo $this->client->numerosTel[0]->numero; ?></li>
         </ul>
