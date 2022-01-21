@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 21 jan. 2022 à 13:15
+-- Généré le : ven. 21 jan. 2022 à 13:19
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -302,6 +302,7 @@ CREATE TABLE IF NOT EXISTS `soldepoint` (
   `id_valeur_point` int(11) DEFAULT NULL,
   `date_expiration` date DEFAULT NULL,
   `quantité` int(11) DEFAULT NULL,
+  `intitule` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_solde_point`),
   KEY `id_client` (`id_client`),
   KEY `id_valeur_point` (`id_valeur_point`)
@@ -405,7 +406,14 @@ CREATE TABLE IF NOT EXISTS `valeurpoint` (
   `id_valeur_point` int(11) NOT NULL AUTO_INCREMENT,
   `valeur` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_valeur_point`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `valeurpoint`
+--
+
+INSERT INTO `valeurpoint` (`id_valeur_point`, `valeur`) VALUES
+(1, 1);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
