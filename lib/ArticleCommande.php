@@ -9,13 +9,15 @@ class ArticleCommande
     public $id;
     public $quantite;
     public $prix_unite;
+    public $paye = false;
 
-    public function __construct($id, $intitule, $quantite, $prix_unite)
+    public function __construct($id, $intitule, $quantite, $prix_unite, $paye)
     {
         $this->id = $id;
         $this->intitule = $intitule;
         $this->quantite = $quantite;
         $this->prix_unite = $prix_unite;
+        $this->paye = $paye;
     }
 
     public function afficherLigneCommande($i) {
@@ -24,6 +26,7 @@ class ArticleCommande
             <th scope="row"><?php echo $i; ?></th>
             <td><?php echo $this->intitule; ?></td>
             <td><?php echo $this->quantite; ?></td>
+            <td><?php echo ($this->paye) ? '<i class="bi bi-check"></i>' : '<i class="bi bi-x"></i>' ?></td>
             <td><?php echo formaterPrix($this->prix_unite); ?></td>
             <td><?php echo formaterPrix($this->recupererTotal()); ?></td>
         </tr>

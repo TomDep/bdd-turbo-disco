@@ -13,4 +13,4 @@ $req = "INSERT INTO soldepoint (id_client, id_valeur_point, date_expiration, qua
 $db->query($req);
 echo $db->error;
 
-//header('Location: ../pages/fiche_client.php?id_client=' . $id_client);
+header('Location: ../pages/fiche_client.php?id_client=' . $id_client);

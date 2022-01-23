@@ -9,9 +9,9 @@ if(isset($_REQUEST['mail'])&&$_REQUEST['mail']!=""){
     $db->query("UPDATE `contact` SET `email` = '".$mail."' WHERE `id_client` = ".$_GET['id_client']."; ");
 }
 
-if(isset($_REQUEST['nom'])&&$_REQUEST['nom']!=""){
-    $nom=$_REQUEST["nom"];
-    $db->query("UPDATE `client` SET `nom` = '".$nom."' WHERE `id_client` = ".$_GET['id_client']."; ");
+if(isset($_REQUEST['nom'])&&$_REQUEST['nom']!="") {
+    $nom = $_REQUEST["nom"];
+    $db->query("UPDATE `client` SET `nom` = '" . $nom . "' WHERE `id_client` = " . $_GET['id_client'] . "; ");
 }
 
 if(isset($_REQUEST['prenom'])&&$_REQUEST['prenom']!=""){
@@ -52,9 +52,11 @@ if(isset($_REQUEST['nom_rue'])&&isset($_REQUEST['ville'])&&isset($_REQUEST['code
     }
 }
 
-$est_adherant = (isset($_REQUEST['adherent']) && $_REQUEST["adherent"] == "on") ? 1 : 0;
-$requete = "UPDATE `client` SET `adherent` = ".$est_adherant." WHERE `id_client` = ".$_GET['id_client'];
-$db->query($requete);
+if(isset($_POST['submit'])) {
+    $est_adherant = (isset($_REQUEST['adherent']) && $_REQUEST["adherent"] == "on") ? 1 : 0;
+    $requete = "UPDATE `client` SET `adherent` = " . $est_adherant . " WHERE `id_client` = " . $_GET['id_client'];
+    $db->query($requete);
+}
 
 ?>
 <!DOCTYPE html>
@@ -69,160 +71,51 @@ $db->query($requete);
 <div class="container p-5">
 <?php
 
+if(!isset($_GET["id_client"])) {
+    header("Location: liste_clients.php");
+}
+
     require_once("../lib/Client.php");
 
     $id_client = $_GET["id_client"];
     $client = creerClient($id_client);
 
 ?>
-    <div class="container border rounded">
-        <div class="ps-5 pt-3">
-            <h2>
-                <?php echo $client->prenom . ' ' . $client->nom; ?>
-            </h2>
-            <p class="pb-2">
-                Client  <?php echo $client->grade; ?>
-            </p>
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="../index.php">Accueil</a></li>
+            <li class="breadcrumb-item"><a href="liste_clients.php">Liste clients</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Fiche client</li>
+        </ol>
+    </nav>
 
-            <a class="btn btn-outline-primary" href="editer_fiche_client.php?id_client=<?php echo $client->id; ?>">
-                <i class="bi bi-pencil me-2"></i>
-                Editer la fiche
-            </a>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-informations-tab" data-bs-toggle="tab" data-bs-target="#nav-informations" type="button" role="tab">Informations du client</button>
+            <button class="nav-link" id="nav-commandes-tab" data-bs-toggle="tab" data-bs-target="#nav-commandes" type="button" role="tab">Commandes</button>
+            <button class="nav-link" id="nav-remise-tab" data-bs-toggle="tab" data-bs-target="#nav-remise" type="button" role="tab">Remise</button>
+            <button class="nav-link" id="nav-points-tab" data-bs-toggle="tab" data-bs-target="#nav-points" type="button" role="tab">Soldes des points</button>
+            <button class="nav-link" id="nav-parametres-tab" data-bs-toggle="tab" data-bs-target="#nav-parametres" type="button" role="tab">Paramètres</button>
         </div>
-
-        <hr>
-
-        <div>
-            <div class="row gx-5">
-                <div class="col">
-                    <h4 class="ps-5 mt-2">Contact</h4>
-                    <ul class="list-group-flush">
-                        <li class="list-group-item"><i class="bi bi-envelope me-3"></i><?php echo $client->email; ?></li>
-                        <li class="list-group-item"><i class="bi bi-facebook me-3"></i><?php echo $client->facebook; ?></li>
-                        <li class="list-group-item"><i class="bi bi-instagram me-3"></i><?php echo $client->instagram; ?></li>
-                    </ul>
-                </div>
-                <div class="col">
-                    <h4 class="ps-5 mt-2">
-                        <?php echo (count($client->adresses) == 1) ? "Adresse" : "Adresses"; ?>
-                    </h4>
-                    <ul class="list-group-flush">
-                        <?php foreach ($client->adresses as $adresse) {?>
-                            <li class="list-group-item">
-                                <?php echo
-                                    $adresse->numero . ' '
-                                    . $adresse->rue . ', '
-                                    . $adresse->codePostal . ' '
-                                    . $adresse->ville; ?>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                </div>
-                <div class="col">
-                    <h4 class="ps-5 mt-2">
-                        <?php echo "Numéro" . ((count($client->numerosTel) == 1) ? " de téléphone" : "s de téléphone"); ?>
-                    </h4>
-                    <ul class="list-group-flush">
-                        <?php foreach ($client->numerosTel as $numero) {?>
-                            <li class="list-group-item">
-                                <i class="bi bi-telephone me-3"></i><?php echo $numero->numero; ?>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-auto">
-                    <h4 class="ps-5">Informations</h4>
-                    <ul class="list-group-flush">
-                        <li class="list-group-item">Montant dépensé : <?php echo $client->total_depense; ?> €</li>
-                        <li class="list-group-item">Remise future : <?php echo $client->remise_future; ?> €</li>
-                        <li class="list-group-item">Adhérant : <?php echo ($client->adhérant) ? "Oui" : "Non"; ?></li>
-                    </ul>
-                </div>
-            </div>
+    </nav>
+    <div class="tab-content border-bottom border-start border-end rounded-bottom ps-5 pt-3 pb-3 pe-5" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-informations" role="tabpanel">
+            <?php include 'includes/fiche client/informations.php'; ?>
+        </div>
+        <div class="tab-pane fade" id="nav-commandes" role="tabpanel">
+            <?php include 'includes/fiche client/commandes.php'; ?>
+        </div>
+        <div class="tab-pane fade" id="nav-remise" role="tabpanel">
+            <?php include 'includes/fiche client/remise.php'; ?>
+        </div>
+        <div class="tab-pane fade" id="nav-points" role="tabpanel">
+            <?php include 'includes/fiche client/points.php'; ?>
+        </div>
+        <div class="tab-pane fade" id="nav-parametres" role="tabpanel">
+            <?php include 'includes/fiche client/parametres.php'; ?>
         </div>
     </div>
 
-    <div class="container border rounded mt-3 p-5">
-        <h4>Ajouter une remise</h4>
-
-        <form method="get" action="../lib/ajouter_remise.php">
-
-            <input hidden name="id_client" value="<?php echo $client->id ?>">
-
-            <div class="mb-3">
-                <label class="form-label">Montant de la remise</label>
-                <input type="number" name="montant" required class="form-control">
-            </div>
-
-            <input type="submit" class="btn btn-primary" value="Ajouter">
-        </form>
-    </div>
-
-    <div class="container border rounded mt-3 p-5">
-        <h4>Ajouter des points</h4>
-
-        <hr>
-
-        <div class="row">
-            <div class="col">
-                <h5>Création d'un nouveau solde</h5>
-
-                <form action="../lib/creer_solde.php" method="get">
-
-                    <input hidden name="id_client" value="<?php echo $client->id ?>">
-
-                    <div class="mb-3">
-                        <label class="form-label">Intitulé du solde</label>
-                        <input type="text" name="intitule" required class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nombre de points à ajouter</label>
-                        <input type="number" name="quantite" required class="form-control">
-                    </div>
-
-                    <input class="btn btn-primary" value="Créer" type="submit">
-                </form>
-            </div>
-            <div class="col">
-                <form method="get" action="../lib/modifier_solde.php">
-
-                    <input hidden name="id_client" value="<?php echo $client->id ?>">
-
-                    <h5>Soldes existant</h5>
-
-                    <?php
-
-                    require_once '../lib/Point.php';
-                    $points = recupererPointsClient($client->id);
-                    $valeur_point = recupererValeurPoint();
-
-                    if(count($points) > 0) {
-                        echo '<label class="form-label">Sélection du solde</label>';
-                        echo '<select class="form-select mb-3">';
-                        foreach ($points as $i => $point) {
-                            echo '<option value="'. $i .'">' . $point->intitule . ' : ' . $point->quantite . ' points = ' . formaterPrix($point->quantite * $valeur_point) . '</option>';
-                        }
-                        ?>
-                        </select>
-
-                        <div class="mb-3">
-                            <label class="form-label">Nombre de points à ajouter</label>
-                            <input type="number" name="montant" required class="form-control">
-                        </div>
-
-                        <input type="submit" class="btn btn-primary" value="Ajouter">
-
-                        <?php
-                    } else {
-                        echo '<p>Le client n\'a pas de soldes.</p>';
-                    }
-                    ?>
-                </form>
-            </div>
-        </div>
-    </div>
 </div>
 
 </body>

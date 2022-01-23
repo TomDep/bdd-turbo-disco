@@ -30,10 +30,19 @@ function creerCommande($id_commande) {
         $commande->ajouterCommentaire("Pas de commentaire.");
 
         // Getting the articles
+        $commande_paye = true;
         $request2 = $db->query("SELECT * FROM itemcommande WHERE id_commande=" . $id_commande);
         while ($ligne2 = mysqli_fetch_array($request2)) {
             $article = mysqli_fetch_array($db->query("SELECT * FROM article WHERE id_article=" . $ligne2['id_article']));
-            $commande->ajouterArticle(new ArticleCommande($article['id_article'], $article['intitule'], $ligne2['quantite'], $article['prix_unitaire']));
+            if($ligne2["id_facture"]) {
+                $paye = true;
+            } else {
+                $paye = false;
+                $commande_paye = false;
+            }
+
+            $commande->payee = $commande_paye;
+            $commande->ajouterArticle(new ArticleCommande($article['id_article'], $article['intitule'], $ligne2['quantite'], $article['prix_unitaire'], $paye));
         }
 
         $ligne3 = mysqli_fetch_array( $db->query("SELECT date_passage FROM commande WHERE id_commande=" . $id_commande));
@@ -44,10 +53,6 @@ function creerCommande($id_commande) {
         $montant_paye = 0;
         while($paiement = $request->fetch_assoc()) {
             $montant_paye += $paiement["montant"];
-        }
-
-        if($montant_paye >= $commande->calculerPrixTotal()) {
-            $commande->payee = true;
         }
 
         return $commande;
@@ -186,6 +191,7 @@ class Commande
                     <th scope="col">#</th>
                     <th scope="col">Produit</th>
                     <th scope="col">Quantité</th>
+                    <th scope="col">Payé</th>
                     <th scope="col">Prix unité</th>
                     <th scope="col">Prix total</th>
                 </tr>
@@ -202,8 +208,17 @@ class Commande
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                     <td class="fw-bold">Total</td>
                     <td class="fw-bold"><?php echo formaterPrix($this->calculerPrixTotal()); ?></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="fw-bold">Restant</td>
+                    <td class="fw-bold"><?php echo formaterPrix($this->calculerPrixRestant()); ?></td>
                 </tr>
             </tfoot>
         </table>
@@ -339,5 +354,15 @@ class Commande
     public function recupererArticles()
     {
         return $this->articles;
+    }
+
+    public function calculerPrixRestant()
+    {
+        $total = 0;
+        foreach ($this->articles as $article) {
+            if(!$article->paye) $total += $article->prix_unite * $article->quantite;
+        }
+
+        return $total;
     }
 }

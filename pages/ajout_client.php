@@ -1,22 +1,7 @@
 <!DOCTYPE html>
 <?php
-//paramètres de connexion à la base de données
-	$Server="localhost";
-	$User="root";
-	$Pwd="";
-	$DB="entreprise";
-
-	//connexion au serveur où se trouve la base de données
-	$Connect = mysqli_connect($Server, $User, $Pwd, $DB);
-
-	//affichage d’un message d’erreur si la connexion a été refusée
-	if (!$Connect)
-		echo "Connexion à la base impossible";
-
-
-    session_start();
-
-		//print_r($reponse);
+    require_once "../lib/connexion.php";
+    $db = creerConnexion();
 ?>
 <html lang="fr">
 <head>
@@ -26,94 +11,68 @@
 <body>
 <?php  include("../templates/menu.php");  ?>
 
+<div class="p-5 border rounded container">
+    <h2 class="mb-3">Ajout d'un nouveau client</h2>
+    <form action="../lib/ajouter_client.php" method="POST">
+        <div class="row mb-3">
+            <div class="col">
+                <input class="form-control mb-1" type="text" placeholder="Nom..." name="nom" required>
+                <input class="form-control" type="text" placeholder="Prenom..." name="prenom" required>
+            </div>
+            <div class="col-auto">
+                <select name="grade" class="form-select">
+                    <?php
+                    $req = "SELECT intitule_grade, id_grade FROM grade ORDER BY id_grade";
+                    $rep = $db->query($req);
 
-<form action="ajout_client.php" method="POST">
-                <h1 >INFO Client</h1>
+                    while($g = $rep->fetch_assoc()) {
+                        ?>
+                        <option value="<?php echo $g["id_grade"]; ?>"><?php echo $g["intitule_grade"]; ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+            <div class="col-auto">
+                <div class="form-check form-switch">
+                    <label class="form-check-label">Adherent</label>
+                    <input type="checkbox" class="form-check-input" role="switch" name="adherent">
+                </div>
+            </div>
+        </div>
 
-                <label><b><p >Adresse e-mail</p></b></label>
-                <input type="text" placeholder="E-mail..." name="mail" required>
+        <h5>Contacts</h5>
 
-				<label><b><p >Nom</p></b></label>
-                <input type="text" placeholder="Nom..." name="nom" required>
+        <div class="row mb-3">
+            <div class="col">
+                <input class="form-control mb-2" type="email" placeholder="E-mail..." name="email" required>
+                <input class="form-control" type="text" placeholder="Numero de telephone" name="numero_tel" required>
+            </div>
+            <div class="col">
+                <input class="form-control" type="text" placeholder="Facebook..." name="facebook" required>
+            </div>
+            <div class="col">
+                <input class="form-control" type="text" placeholder="Instagram..." name="instagram" required>
+            </div>
+        </div>
 
-				<label><b><p >Prenom</p></b></label>
-                <input type="text" placeholder="Prenom..." name="prenom" required>
+        <h5>Adresse</h5>
 
-				<label><b><p >Grade</p></b></label>
-                <input type="text" placeholder="Grade..." name="grade" required>
+        <div class="row">
+            <div class="col-auto">
+                <input class="form-control" type="number" placeholder="Numero de rue..." name="numero" required>
+            </div>
+            <div class="col-auto">
+                <input class="form-control" type="text" placeholder="Nom de rue..." name="rue" required>
+            </div>
+            <div class="col-auto">
+                <input class="form-control" type="text" placeholder="Ville..." name="ville" required>
+            </div>
+            <div class="col-auto">
+                <input class="form-control" type="number" placeholder="Code postal..." name="code_postal" required>
+            </div>
+        </div>
 
-				<label><b><p >Facebook</p></b></label>
-                <input type="text" placeholder="Facebook..." name="facebook" required>
-
-                <label><b><p >Instagram</p></b></label>
-                <input type="text" placeholder="Instagram..." name="instagram" required>
-
-                <label><b><p >Numero de telephone</p></b></label>
-                <input type="text" placeholder="Numero..." name="numero_tel" required>
-
-                <label><b><p >Numero de rue</p></b></label>
-                <input type="text" placeholder="Numero de rue..." name="numero_rue" required>
-
-                <label><b><p >Nom de rue</p></b></label>
-                <input type="text" placeholder="Nom de rue..." name="nom_rue" required>
-
-                <label><b><p >Ville</p></b></label>
-                <input type="text" placeholder="Ville..." name="ville" required>
-
-                <label><b><p >Code Postal</p></b></label>
-                <input type="text" placeholder="Code postal..." name="code" required>
-
-
-
-                <input type="submit" id='submit' value='Inscrire' >
-                            </form>
-
-                <?php
-
-
-
-					if(isset($_REQUEST['mail'])){
-					$mail=$_REQUEST["mail"];
-					$nom=$_REQUEST["nom"];
-					$prenom=$_REQUEST["prenom"];
-					$grade=$_REQUEST["grade"];
-					$facebook=$_REQUEST["facebook"];
-					$instagram=$_REQUEST["instagram"];
-					$numero_tel=$_REQUEST["numero_tel"];
-					$numero_rue=$_REQUEST["numero_rue"];
-					$nom_rue=$_REQUEST["nom_rue"];
-					$ville=$_REQUEST["ville"];
-					$code=$_REQUEST["code"];
-
-					if($mail==""||$grade==""||$facebook==""||$prenom==""||$nom==""){
-
-					}
-					else{
-
-					$requete = "INSERT INTO Client (id_grade, nom, prenom,total_depense,remise_future,adherent) VALUES ('".$grade."', '".$nom."', '".$prenom."',0,0,0);";
-					$Connect->query($requete);
-					$requete = "INSERT INTO Adresse (numero, rue, ville,code_postal,id_client) (SELECT '".$numero_rue."', '".$nom_rue."', '".$ville."','".$code."',id_client FROM Client WHERE nom='".$nom."' AND prenom = '".$prenom."');";
-					$Connect->query($requete);
-
-                    $requete = "INSERT INTO Contact (email, instagram, facebook,id_client) (SELECT '".$mail."', '".$instagram."', '".$facebook."',id_client FROM Client WHERE nom='".$nom."' AND prenom = '".$prenom."');";
-					$Connect->query($requete);
-					$requete = "INSERT INTO numerotelephone (numero,id_client) (SELECT '".$numero_tel."',id_client FROM Client WHERE nom='".$nom."' AND prenom = '".$prenom."');";
-					$Connect->query($requete);
-					$requete = "SELECT * FROM adresse NATURAL JOIN client WHERE prenom = '".$prenom."' AND nom = '".$nom."' ";
-                    $reponse = $Connect->query($requete);
-
-					if($ligne = mysqli_fetch_array($reponse)){
-
-						echo "<p id='idPresentation'><font color='green'>Inscription validée</p>";
-
-					}
-
-					else{
-						echo "<p id='idPresentation'><font color='red'>erreur</p>";
-					}
-					}
-					}
-                ?>
-
+        <input class="btn btn-primary mt-3" type="submit" id='submit' value='Ajouter'>
+    </form>
+</div>
 </body>
 </html>

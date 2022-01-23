@@ -12,7 +12,7 @@ $commande = $_SESSION["commande"];
 
 $db = creerConnexion();
 if(!$commande->ajouterBDD()) {
-    echo '<p>Erreur : ' . $db->error . '</p>';
+    //echo '<p>Erreur : ' . $db->error . '</p>';
 }
 
 ?>
@@ -29,33 +29,7 @@ if(!$commande->ajouterBDD()) {
 <div class="container p-5 mt-4 rounded shadow-lg">
     <h1>La commande n°<?php echo $commande->id ?> a été passée avec succès</h1>
 
-    <div class="border rounded mt-3 p-3">
-        <h4>Ajouter un acompte :</h4>
-
-        <p>Le montant total de la commande est de <span class="fw-bold"><?php echo formaterPrix($commande->calculerPrixTotal()) ?></span>
-            <br>
-            Vous ne pouvez pas déposer d'acompte avec les points de fidélité.
-        </p>
-
-        <form method="GET" action="../lib/creer_acompte.php">
-            <label class="form-label">Montant</label>
-            <input class="form-control" type="number" name="montant">
-
-            <label class="form-label mt-3">Type de paiement</label>
-            <select class="form-select" name="type_paiement">
-                <option value="3">Carte banquaire</option>
-                <option value="1">Chèque</option>
-                <option value="2">Espèces</option>
-            </select>
-
-            <input hidden name="id_commande" value="<?php echo $commande->id ?>">
-
-            <input type="submit" class="btn btn-primary mt-3" value="Ajouter">
-        </form>
-    </div>
-
-    <a class="btn btn-secondary" href="commande.php?id_commande=<?php echo $commande->id ?>">Visualiser la commande</a>
-
+    <a class="btn btn-primary mt-3" href="commande.php?id_commande=<?php echo $commande->id ?>">Voir la nouvelle commande</a>
 </div>
 
 </body>

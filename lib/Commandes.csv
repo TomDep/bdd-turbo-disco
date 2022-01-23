@@ -1,3 +1,5 @@
-Id commande ; Id Status Commande ; Id Client ; Date de passage ; Date de validation ; Date d'arrivÃ©e ; Prix total 
-9; 4; 3; 2022-01-21; ; ; 
-10; 4; 11; 2022-01-21; ; ; 
+Id commande ; Nom ; Prenom ; Status commande ; Date de passage ;  Date de validation ; Date de cloture ; Prix total 
+10 ; Djerbi ; Matteo ; Commande livrée ; 2022-01-21 ;  ;  ; 530
+9 ; Djerbi ; Matteo ; Commande livrée ; 2022-01-21 ;  ;  ; 40
+11 ; Djerbi ; Matteo ; Commande livrée ; 2022-01-21 ;  ;  ; 200
+12 ; Djerbi ; Matteo ; Commande en cours ; 2022-01-23 ;  ;  ; 60

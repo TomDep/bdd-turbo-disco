@@ -20,9 +20,9 @@ $result = $db->query($req);
 $article_data = $result->fetch_assoc();
 
 // Ajout de l'article à la commande
-$article = new ArticleCommande($_GET["id_article"], $article_data["intitule"], $_GET["quantite"], $article_data["prix_unitaire"]);
+$article = new ArticleCommande($_GET["id_article"], $article_data["intitule"], $_GET["quantite"], $article_data["prix_unitaire"], false);
 $commande->ajouterArticle($article);
 
 $_SESSION["commande"] = $commande;
 
-header("Location: nouvelle_commande_articles.php");
+header("Location: ../pages/nouvelle_commande_articles.php");

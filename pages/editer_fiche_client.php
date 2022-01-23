@@ -11,6 +11,11 @@
 
 <?php
 
+if(!isset($_GET["id_client"])) {
+    header("Location: liste_clients.php");
+}
+
+
 require_once("../lib/Client.php");
 
 $client = creerClient($_GET["id_client"]);
@@ -62,7 +67,7 @@ $client = creerClient($_GET["id_client"]);
                                         . $adresse->ville; ?>
 
                                     <?php if($i != 0) { ?>
-                                        <a href="editer_ficher_client.php?supprimer_adresse=<?php echo $adresse->id; ?>" type="button" class="float-end btn btn-outline-danger btn-sm">X</a>
+                                        <a href="../lib/supprimer_adresse.php?id_client=<?php echo $client->id ?>&id_adresse=<?php echo $adresse->id; ?>" type="button" class="float-end btn btn-outline-danger btn-sm">X</a>
                                     <?php } ?>
                                 </p>
                             </li>
@@ -83,7 +88,7 @@ $client = creerClient($_GET["id_client"]);
                                     <i class="bi bi-telephone me-3"></i><?php echo $numero->numero; ?>
 
                                     <?php if($i != 0) { ?>
-                                        <a href="editer_ficher_client.php?supprimer_numero=<?php echo $numero->id; ?>" type="button" class="float-end btn btn-outline-danger btn-sm">X</a>
+                                        <a href="../lib/supprimer_numero.php?id_client=<?php echo $client->id ?>&id_numero=<?php echo $numero->id; ?>" type="button" class="float-end btn btn-outline-danger btn-sm">X</a>
                                     <?php } ?>
                                 </p>
                             </li>
@@ -103,7 +108,7 @@ $client = creerClient($_GET["id_client"]);
                     <li class="list-group-item">
                         <div class="form-check form-switch ps-0">
                             <label class="form-check-label" for="i-adherent">Adhérent :</label>
-                            <input class="form-check-input float-end" id="i-adherent" type="checkbox" role="switch" name="adherent" <?php if($client->adhérant) echo "checked" ?>>
+                            <input class="form-check-input float-end" id="i-adherent" type="checkbox" role="switch" name="adherent" <?php if($client->adherant) echo "checked" ?>>
                         </div>
                     </li>
                 </ul>
@@ -111,7 +116,7 @@ $client = creerClient($_GET["id_client"]);
         </div>
 
         <div class="bg-dark border-top w-100 p-2" style="position: fixed; bottom: 0px; left: 0px; z-index: 1000">
-            <button class="btn btn-success float-end" type="submit">
+            <button class="btn btn-success float-end" type="submit" name="submit" value="Submit">
                 <i class="bi bi-check-square me-2"></i>
                 Valider les modifications</button>
             <a class="btn btn-outline-light float-end me-2" href="fiche_client.php?id_client=<?php echo $client->id;?>">
@@ -122,12 +127,15 @@ $client = creerClient($_GET["id_client"]);
         </form>
     </div>
     <div class="container border rounded mt-4 mb-5">
-        <h4 class="ps-5 pt-3">Ajouter une adresse</h4>
+        <h4 class="ps-5 pt-1 mt-3">Ajouter une adresse</h4>
+        <form class="ps-5 p-2" action="../lib/ajouter_adresse.php" method="get">
+            <input hidden name="id_client" value="<?php echo $client->id; ?>"">
+
             <div class="input-group mb-3">
-                <input class="form-control" type="text" placeholder="Numero de rue" name="numero_rue" >
-                <input class="form-control" type="text" placeholder="Nom de rue" name="nom_rue" >
+                <input class="form-control" type="text" placeholder="Numero de rue" name="numero" >
+                <input class="form-control" type="text" placeholder="Nom de rue" name="rue" >
                 <input class="form-control" type="text" placeholder="Ville" name="ville" >
-                <input class="form-control" type="text" placeholder="Code postal" name="code" >
+                <input class="form-control" type="number" placeholder="Code postal" name="code_postal" >
             </div>
             <input class="btn btn-primary" type='submit'  id='submit' value='Ajouter adresse' >
         </form>
@@ -135,7 +143,9 @@ $client = creerClient($_GET["id_client"]);
         <hr class="ms-4 me-4">
 
         <h4 class="ps-5 pt-1">Ajouter un numéro de téléphone</h4>
-        <form class="ps-5 p-2" action="editer_fiche_client.php?id_client=<?php echo $client->id; ?>" method="POST">
+        <form class="ps-5 p-2" action="../lib/ajouter_numero.php" method="post">
+            <input hidden name="id_client" value="<?php echo $client->id; ?>"">
+
             <div class="input-group">
                 <input class="form-control" type="text" placeholder="+33 7 83 55 79 62" name="numero_tel" >
                 <input class="btn btn-primary" type='submit' id='submit'  value='Ajouter un numéro de téléphone' >

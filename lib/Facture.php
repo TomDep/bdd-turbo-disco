@@ -2,14 +2,17 @@
 
 class Facture
 {
+    public $id;
+    public $date_facturation;
+
     public $articles = [];
     public $id_commande;
-    private $total_ht;
     public $id_client;
 
     public $frais_livraison;
     public $frais_service;
     public $remise;
+
 
     public function __construct($id_commande, $id_client)
     {

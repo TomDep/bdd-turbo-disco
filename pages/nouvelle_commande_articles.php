@@ -7,23 +7,22 @@ require_once '../lib/ArticleCommande.php';
 
 session_start();
 
-if(!isset($_POST["client_full"]) && !isset($_SESSION["commande"])) {
+if(!isset($_GET["client_full"]) && !isset($_SESSION["commande"])) {
     header('Location: nouvelle_commande.php');
     exit();
 }
 
-// Creer la commande si elle n'existe pas déjà
 if(!isset($_SESSION["commande"])) {
-    $id_client = explode('#', $_POST["client_full"])[1];
-
+// Creer la commande si elle n'existe pas déjà
+    $id_client = explode('#', $_GET["client_full"])[1];
     $client = creerClient($id_client);
-    // L'id n'est pas encore définie
+
+// L'id n'est pas encore définie
     $commande = new Commande(-1, $client);
     $_SESSION["commande"] = $commande;
 } else {
     $commande = $_SESSION["commande"];
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -132,14 +131,14 @@ if(!isset($_SESSION["commande"])) {
 
                 while ($article = $result->fetch_assoc()) {
                     echo '<tr>';
-                    echo '<form id="row-'. $article["id_article"] .'" method="GET" action="nouvelle_commande_ajouter_article.php">';
+                    echo '<form id="row-'. $article["id_article"] .'" method="GET" action="../lib/nouvelle_commande_ajouter_article.php">';
                     echo '<input hidden name="id_article" value="'. $article["id_article"] .'">';
 
                     echo '<td>' . $article["intitule"] . '</td>';
                     echo '<td>' . formaterPrix($article["prix_unitaire"]) . '</td>';
                     echo '<td>' . $article["intitule_status_article"] . '</td>';
                     echo '<td class="input-group-sm">
-                            <input required class="form-control" type="number" name="quantite" style="width: 30px; -moz-appearance: textfield;">
+                            <input required class="form-control" type="number" name="quantite" style="width: 60px; -moz-appearance: textfield;">
                           </td>';
                     echo '<td>
                             <button type="submit" class="btn-outline-primary btn btn-sm">+</button>

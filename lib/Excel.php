@@ -1,46 +1,38 @@
 <?php
-echo ("oui");
 
-//param�tres de connexion � la base de donn�es
-$Server="localhost";
-$User="root";
-$Pwd="";
-$DB="entreprise";
+require_once 'connexion.php';
+require_once 'Commande.php';
 
-//connexion au serveur o� se trouve la base de donn�es
-$Connect = mysqli_connect($Server, $User, $Pwd, $DB);
+$db = creerConnexion();
+$request = $db->query('SELECT id_commande, nom, prenom, intitule_status_commande, date_passage, date_validation, date_cloture FROM Commande natural join client natural join statuscommande');
 
-//affichage d�un message d�erreur si la connexion a �t� refus�e
-if (!$Connect)
-    echo "Connexion � la base impossible";
+if(file_exists ( "Commandes.csv")) unlink( "Commandes.csv" ) ;
 
-
-session_start();
-
-
-
-$request = $Connect->query('SELECT id_commande,  nom, prenom, intitule_paiement, date_passage, date_validation, prix_total FROM Commande natural join client natural join statuscommande');
-
-if( file_exists ( "Commandes.csv"))
-    unlink( "Commandes.csv" ) ;
 $file = fopen("Commandes.csv", "a");
-fwrite($file,"Id commande ; Nom client ; Prenom client ; Intitule paiement ; Date de passage ;  Date de validation ; Prix total \n");
-var_dump($request);
-while($ligne1 = mysqli_fetch_array($request)){
+fwrite($file,"Id commande ; Nom ; Prenom ; Status commande ; Date de passage ;  Date de validation ; Date de cloture ; Prix total \n");
 
-    for ($i=0;$i<7;$i++){
-        if ($i<6){
-            fwrite($file,$ligne1[$i].'; ');
-        }
+while($commande = $request->fetch_assoc()){
 
-        else if ($i==6) {
-            fwrite($file,$ligne1[6]);
-            fputs($file,"\n");
-        }
-    }
+    fwrite($file, $commande["id_commande"] . ' ; ');
+    fwrite($file, $commande["nom"] . ' ; ');
+    fwrite($file, $commande["prenom"] . ' ; ');
+    fwrite($file, $commande["intitule_status_commande"] . ' ; ');
+    fwrite($file, $commande["date_passage"] . ' ; ');
+    fwrite($file, $commande["date_validation"] . ' ; ');
+    fwrite($file, $commande["date_cloture"] . ' ; ');
 
+    // Récupération du prix total
+    $commande_obj = creerCommande($commande["id_commande"]);
 
+    fwrite($file, $commande_obj->calculerPrixTotal() . "\n");
 }
 
-//header("Location: http://localhost/bdd-turbo-disco/pages/liste_commandes.php")
-?>
+include 'Commandes.csv';
+
+header('Content-Description: File Transfer');
+header("Content-Type: application/csv") ;
+header("Content-Disposition: attachment; filename=download.csv");
+header("Pragma: no-cache");
+header("Expires: 0");
+
+

@@ -31,9 +31,6 @@
                     </ul>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="generer_facture.php">Générer une facture</a>
-                </li>
             </ul>
         </div>
     </div>

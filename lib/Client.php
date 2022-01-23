@@ -43,10 +43,11 @@ function creerClient($id_client) {
         }
     } else {
         echo '<p class="text-danger">' . $db->error . '</p>';
-        return -1;
+        //return $db->error;
     }
 
-    return -1;
+    echo '<p class="text-danger">' . $db->error . '</p>';
+    //return $db->error;
 }
 
 function creerListeClients() {
@@ -96,7 +97,7 @@ function creerListeClients() {
         }
     } else {
         echo '<p class="text-danger">' . $db->error . '</p>';
-        return -1;
+        return $db->error;
     }
 
     //echo "<p>Fin</p>";
@@ -143,7 +144,7 @@ class Client
     public $grade;
     public $total_depense;
     public $remise_future;
-    public $adhérant;
+    public $adherant;
     public $id;
 
     // Adresses
@@ -157,7 +158,7 @@ class Client
     public $instagram;
     public $email;
 
-    public function __construct($id, $nom, $prenom, $grade, $facebook, $instagram, $email, $remise_future, $adhérant)
+    public function __construct($id, $nom, $prenom, $grade, $facebook, $instagram, $email, $remise_future, $adherant)
     {
         $this->id = $id;
         $this->nom = $nom;
@@ -167,7 +168,7 @@ class Client
         $this->instagram = $instagram;
         $this->email = $email;
         $this->remise_future=$remise_future;
-        $this->adhérant=$adhérant;
+        $this->adherant=$adherant;
 
         $db = creerConnexion();
 
@@ -175,6 +176,7 @@ class Client
         $req = "SELECT SUM(montant) AS total FROM paiement NATURAL JOIN commande WHERE id_client = " . $id . " GROUP BY id_client";
         $response = $db->query($req);
 
+        $this->total_depense = 0;
         if(!$response) {
             echo '<p>Erreur : ' . $db->error . '</p>';
         } else {
@@ -227,7 +229,7 @@ class Client
             </div>
 
             <div class="col-3">
-                <span>Adhérant : <?php echo $this->adhérant; ?> </span>
+                <span>Adhérant : <?php echo ($this->adherant) ? "Oui" : "Non" ?> </span>
             </div>
             <div class="col-1">
                 <span><?php echo $this->grade; ?></span>

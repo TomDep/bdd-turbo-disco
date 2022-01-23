@@ -8,6 +8,10 @@
 <?php  include("../templates/menu.php");  ?>
 <?php
 
+if(!isset($_GET["id_commande"])) {
+    header("Location: liste_commandes.php");
+}
+
 require_once '../lib/Commande.php';
 require_once '../lib/Client.php';
 require_once '../lib/ArticleCommande.php';
@@ -19,17 +23,17 @@ $Pwd = "";
 $DB = "entreprise";
 
 //connexion au serveur où se trouve la base de données
-$Connect = mysqli_connect($Server, $User, $Pwd, $DB);
+$db = mysqli_connect($Server, $User, $Pwd, $DB);
 
 //affichage d’un message d’erreur si la connexion a été refusée
-if (!$Connect)
+if (!$db)
     echo "Connexion à la base impossible";
 
 
 session_start();
 
 
-$request=$Connect->query("SELECT * FROM commande WHERE id_commande=".$_GET['id_commande']);
+$request=$db->query("SELECT * FROM commande WHERE id_commande=".$_GET['id_commande']);
 while($ligne = mysqli_fetch_array($request)) {
     $client1 = creerClient($ligne['id_client']);
     $commande1 = new Commande($ligne['id_commande'], $client1);
@@ -48,9 +52,9 @@ while($ligne = mysqli_fetch_array($request)) {
 
     $commande1->ajouterCommentaire("Pas de commentaire.");
 
-    $request2 = $Connect->query("SELECT * FROM itemcommande WHERE id_commande=" . $ligne['id_commande']);
+    $request2 = $db->query("SELECT * FROM itemcommande WHERE id_commande=" . $ligne['id_commande']);
     while ($ligne2 = mysqli_fetch_array($request2)) {
-        $article = mysqli_fetch_array($Connect->query("SELECT * FROM article WHERE id_article=" . $ligne2['id_article']));
+        $article = mysqli_fetch_array($db->query("SELECT * FROM article WHERE id_article=" . $ligne2['id_article']));
         $commande1->ajouterArticle(new ArticleCommande($article['id_article'], $article['intitule'], $ligne2['quantite'], $article['prix_unitaire']));
     }
 }?>

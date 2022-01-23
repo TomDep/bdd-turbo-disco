@@ -21,28 +21,41 @@ require_once "../lib/Client.php";
 
 <div class="container p-5">
 
-    <ul class="list-group">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="../index.php">Accueil</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Liste clients</li>
+        </ol>
+    </nav>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom du client</th>
+                <th>Adherent</th>
+                <th>Grade</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody
     <?php
-    if(isset($_GET['supprimer'])){
-
-        $db->query("DELETE FROM adresse WHERE id_adresse=".$_GET['supprimer']);
-
-    }
-    if(isset($_GET['supprimer_num'])){
-
-        $db->query("DELETE FROM numerotelephone WHERE numero=".$_GET['supprimer_num']);
-
-    }
-
     $clients = creerListeClients();
 
     foreach ($clients as $client) {
     ?>
-                <li class="list-group-item"><?php $client->afficherApercu(); ?></li>
+            <tr>
+                <th><?php echo $client->id ?></th>
+                <td><?php echo $client->getNomPrenom() ?></td>
+                <td><?php echo ($client->adherant) ? '<i class="bi bi-check"></i>' : '<i class="bi bi-x"></i>' ?></td>
+                <td><?php echo $client->grade ?></td>
+                <td><a href="fiche_client.php?id_client=<?php echo $client->id ?>">Voir la fiche</a></td>
+            </tr>
     <?php
     }
     ?>
-    </ul>
+        </tbody>
+    </table>
 </div>
 
 </body>

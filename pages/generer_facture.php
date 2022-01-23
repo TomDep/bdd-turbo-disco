@@ -38,6 +38,8 @@ $commande = creerCommande($_GET['id_commande']);
                 <tbody>
                 <?php
                 foreach ($commande->articles as $article) {
+                    if($article->paye) continue;
+
                     echo '<tr>';
 
                     echo '<td><input class="form-check" type="checkbox" checked name="'. $article->id .'"></td>';
