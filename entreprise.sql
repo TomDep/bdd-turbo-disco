@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : dim. 23 jan. 2022 à 20:39
+-- Généré le : dim. 23 jan. 2022 à 22:14
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `article` (
   `valeur_points` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_article`),
   KEY `id_status_article` (`id_status_article`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `article`
@@ -78,7 +78,15 @@ CREATE TABLE IF NOT EXISTS `article` (
 
 INSERT INTO `article` (`id_article`, `id_status_article`, `intitule`, `prix_unitaire`, `promotion`, `valeur_points`) VALUES
 (1, 1, 'Creme Nivea', 10, 0, 10),
-(2, 1, 'Gel Douche Garnier', 15, 0, 15);
+(2, 1, 'Gel Douche Garnier', 15, 0, 15),
+(3, 2, 'Rouge a levres', 20, 0, 15),
+(4, 2, 'Masque en argile', 12, 0, 5),
+(5, 1, 'Pinceau maquillant', 19, 0, 10),
+(6, 1, 'BAse fixante phare a paupieres', 10, 0, 10),
+(7, 1, 'Fond de teint matifiant', 10, 0, 10),
+(8, 2, 'Creme anti-rides', 30, 0, 15),
+(9, 1, 'Huile pour visages', 3, 0, 5),
+(10, 1, 'Creme hydratante', 10, 0, 15);
 
 -- --------------------------------------------------------
 
@@ -96,16 +104,24 @@ CREATE TABLE IF NOT EXISTS `client` (
   `adherent` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id_client`),
   KEY `id_grade` (`id_grade`)
-) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `client`
 --
 
 INSERT INTO `client` (`id_client`, `id_grade`, `nom`, `prenom`, `remise_future`, `adherent`) VALUES
-(17, 2, 'Djerbi', 'MattÃ©o', 0, 1),
+(17, 2, 'Djerbi', 'Matteo', 0, 1),
 (14, 3, 'De Pasquale', 'Tom', 0, 1),
-(16, 2, 'Soulan', 'Guilhem', 0, 0);
+(16, 2, 'Soulan', 'Guilhem', 0, 0),
+(18, 1, 'Durand', 'Arya', 0, 1),
+(19, 3, 'David', 'Iris', 0, 1),
+(20, 1, 'Joulain', 'Pierre', 0, 1),
+(21, 3, 'Prost', 'Nicolas', 0, 0),
+(22, 2, 'Rilo', 'Charlene', 0, 1),
+(23, 1, 'Miza', 'Ludivine', 0, 0),
+(24, 1, 'Radis', 'Emma', 0, 1),
+(25, 2, 'Romi', 'Zoé', 0, 1);
 
 -- --------------------------------------------------------
 
