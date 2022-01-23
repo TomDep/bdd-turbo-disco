@@ -1,8 +1,0 @@
-SELECT nom FROM Client WHERE id_client=1;
-SELECT prenom FROM Client WHERE id_client=1;
-SELECT intitule_grade FROM Grade NATURAL JOIN Client WHERE id_client=1;
-SELECT facebook FROM Contact NATURAL JOIN Client WHERE id_client=1;
-SELECT instagram FROM Contact NATURAL JOIN Client WHERE id_client=1;
-SELECT email FROM Contact NATURAL JOIN Client WHERE id_client=1;
-SELECT numéro,rue,ville,code_postal FROM Adresse NATURAL JOIN Client WHERE id_client=1;
-SELECT numero FROM NumeroTelephone NATURAL JOIN Client WHERE id_client=1;
