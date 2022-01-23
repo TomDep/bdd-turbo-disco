@@ -18,6 +18,7 @@
             case StatutCommande::attente_validation:
                 echo "<a href='../lib/changer_statut_commande.php?id_commande=". $commande->getId() ."&statut_actuel=". $commande->recupererStatus() ."' class='btn btn-success me-3'>Valider la commande</a>";
                 echo '<a href="../lib/annuler_commande.php?id_commande='. $commande->getId() .'" class="btn btn-danger me-3">Annuler la commande</a>';
+                echo '<p class="mt-3">Vous devez valider la commande pour pouvoire éditer une facture.</p>';
                 break;
 
             case StatutCommande::en_cours:

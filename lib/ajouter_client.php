@@ -42,4 +42,10 @@ $db->query($req);
 
 echo $db->error;
 
+// Création d'un solde de fidélité
+$req = "INSERT INTO soldepoint SET (id_client, id_valeur_point, date_expiration, quantite, intitule) VALUES (?, 1, NULL, 0, 'Fidélité')";
+$stmt = $db->prepare($req);
+$stmt->bind_param("i", $id_client);
+$stmt->execute();
+
 header("Location: ../pages/fiche_client.php?id_client=" . $id_client);

@@ -61,6 +61,7 @@
             <li class="list-group-item">Montant dépensé : <?php echo $client->total_depense; ?> €</li>
             <li class="list-group-item">Remise future : <?php echo $client->remise_future; ?> €</li>
             <li class="list-group-item">Adhérant : <?php echo ($client->adherant) ? "Oui" : "Non"; ?></li>
+            <li class="list-group-item">VIP : <?php echo ($client->est_vip) ? "Oui" : "Non"; ?></li>
         </ul>
     </div>
 </div>

@@ -1,5 +1,9 @@
 <?php
 
+require_once "Grade.php";
+require_once "Adresse.php";
+require_once "NumeroTelephone.php";
+
 function creerClient($id_client) {
 
     $query = "SELECT
@@ -104,39 +108,6 @@ function creerListeClients() {
     return $clients;
 }
 
-class NumeroTelephone
-{
-    public $id;
-    public $numero;
-
-    public function __construct($id, $numero) {
-        $this->id = $id;
-        $this->numero = $numero;
-    }
-}
-
-class Adresse
-{
-    public $numero;
-    public $rue;
-    public $ville;
-    public $codePostal;
-    public $id;
-
-    public function __construct($id, $numero, $rue, $codePostal, $ville)
-    {
-        $this->id = $id;
-        $this->numero = $numero;
-        $this->rue = $rue;
-        $this->ville = $ville;
-        $this->codePostal = $codePostal;
-    }
-
-    public function afficher() {
-
-    }
-}
-
 class Client
 {
     public $nom;
@@ -157,6 +128,10 @@ class Client
     public $facebook;
     public $instagram;
     public $email;
+    /**
+     * @var bool
+     */
+    public $est_vip;
 
     public function __construct($id, $nom, $prenom, $grade, $facebook, $instagram, $email, $remise_future, $adherant)
     {
@@ -185,7 +160,42 @@ class Client
             }
         }
 
-        // Récupérer si il
+        // Mise à jour du grade
+        $this->miseAJourGrade($db);
+    }
+
+    private function miseAJourGrade($db) {
+        /** @var $db mysqli */
+
+        // Savoir si le client est VIP
+        $result = $db->query("SELECT vip FROM client WHERE id_client = " . $this->id);
+        $this->est_vip = $result->fetch_all()[0][0];
+
+        if($this->est_vip) {
+            $this->grade = "VIP";
+            return;
+        }
+
+        // Récupération de tous les grades
+        $req = "SELECT * FROM grade";
+        $result = $db->query($req);
+
+        $grades = [];
+
+        while($grade = $result->fetch_assoc()) {
+            $grades[] = new Grade($grade["id_grade"], $grade["intitule_grade"], $grade["min_depense"], $grade["max_depense"]);
+        }
+
+        $id_grade = 1;
+        foreach ($grades as $grade) {
+            if($grade->min <= $this->total_depense && $grade->max >= $this->total_depense) {
+                $id_grade = $grade->id;
+                $this->grade = $grade->intitule;
+            }
+        }
+
+        // Mise à jour dans la base de données
+        $db->query("UPDATE client SET id_grade = " . $id_grade . " WHERE id_client = " . $this->id);
     }
 
     public function recupererNumeros($db) {

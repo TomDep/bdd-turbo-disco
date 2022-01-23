@@ -15,7 +15,6 @@ if(!isset($_GET["id_client"])) {
     header("Location: liste_clients.php");
 }
 
-
 require_once("../lib/Client.php");
 
 $client = creerClient($_GET["id_client"]);
@@ -109,6 +108,12 @@ $client = creerClient($_GET["id_client"]);
                         <div class="form-check form-switch ps-0">
                             <label class="form-check-label" for="i-adherent">Adhérent :</label>
                             <input class="form-check-input float-end" id="i-adherent" type="checkbox" role="switch" name="adherent" <?php if($client->adherant) echo "checked" ?>>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="form-check form-switch ps-0">
+                            <label class="form-check-label" for="i-vip">VIP :</label>
+                            <input class="form-check-input float-end" id="i-vip" type="checkbox" role="switch" name="vip" <?php if($client->est_vip) echo "checked" ?>>
                         </div>
                     </li>
                 </ul>

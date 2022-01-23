@@ -56,6 +56,10 @@ if(isset($_POST['submit'])) {
     $est_adherant = (isset($_REQUEST['adherent']) && $_REQUEST["adherent"] == "on") ? 1 : 0;
     $requete = "UPDATE `client` SET `adherent` = " . $est_adherant . " WHERE `id_client` = " . $_GET['id_client'];
     $db->query($requete);
+
+    $est_vip = (isset($_REQUEST['vip']) && $_REQUEST["vip"] == "on") ? 1 : 0;
+    $requete = "UPDATE `client` SET `vip` = " . $est_vip . " WHERE `id_client` = " . $_GET['id_client'];
+    $db->query($requete);
 }
 
 ?>

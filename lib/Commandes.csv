@@ -1,5 +1,6 @@
 Id commande ; Nom ; Prenom ; Status commande ; Date de passage ;  Date de validation ; Date de cloture ; Prix total 
-10 ; Djerbi ; Matteo ; Commande livrée ; 2022-01-21 ;  ;  ; 530
-9 ; Djerbi ; Matteo ; Commande livrée ; 2022-01-21 ;  ;  ; 40
-11 ; Djerbi ; Matteo ; Commande livrée ; 2022-01-21 ;  ;  ; 200
-12 ; Djerbi ; Matteo ; Commande en cours ; 2022-01-23 ;  ;  ; 60
+18 ; De Pasquale ; Tom ; Commande annulée ; 2022-01-23 ;  ; 2022-01-23 ; 440
+17 ; Soulan ; Guilhem ; Attente validation ; 2022-01-23 ;  ;  ; 50
+16 ; De Pasquale ; Tom ; Attente validation ; 2022-01-23 ;  ;  ; 40
+14 ; De Pasquale ; Tom ; Commande livrée ; 2022-01-23 ; 2022-01-23 ; 2022-01-23 ; 50
+15 ; De Pasquale ; Tom ; Commande en cours ; 2022-01-23 ; 2022-01-23 ;  ; 15

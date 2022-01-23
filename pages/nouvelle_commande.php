@@ -20,8 +20,8 @@
 
     <hr class="w-50">
     <form autocomplete="off" method="GET" action="nouvelle_commande_articles.php">
-        <label class="form-label">Client (entrez le nom ou le prenom)</label>
-        <input type="Text" class="form-control" list="clients" name="client_full">
+        <label class="form-label">Sélectionner un client</label>
+        <input type="Text" class="form-control" placeholder="Rechercher à partir du nom ou de l'id ..." list="clients" name="client_full">
         <datalist id="clients">
             <?php
             require_once '../lib/connexion.php';
